@@ -24,18 +24,18 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
 
-router.put('/', async (req: Request, res: Response) => {
+router.patch('/:id', async (req: Request, res: Response) => {
     try {
-      const categoryId = req.params.categoryId;
-      const updatedCategoryName = req.body.updatedCategoryName;
-      const updatedCategory = await updateCategory(categoryId, updatedCategoryName);
+      const {id} = req.params;
+      const updatedCategoryName = req.body.name;
+      const updatedCategory = await updateCategory(id, updatedCategoryName);
       res.status(200).json(updatedCategory);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   });
 
-router.delete('/categories/:categoryId', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       await deleteCategory(id);

@@ -33,7 +33,7 @@ router.patch("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/products/:productId', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       await deleteProduct(id);
@@ -43,13 +43,21 @@ router.delete('/products/:productId', async (req: Request, res: Response) => {
     }
   });
 
-router.patch('/products/disable/:productId', async (req: Request, res: Response) => {
+  router.patch('/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      await disableProduct(id);
-      res.status(200).json({ message: `Product with ID ${id} successfully disabled.` });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      const { disabled } = req.body;
+  
+      if (disabled === undefined) {
+        throw new Error('The "disable" field is required in the request body');
+      }
+  
+      await disableProduct(id, disabled);
+  
+      res.json({ message: `Product ${disabled ? 'disabled' : 'enabled'} successfully` });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error changing product status' });
     }
   });
 

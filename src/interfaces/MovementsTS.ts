@@ -1,14 +1,15 @@
 
-export interface HistoryTS {
+export interface MovementsTS {
     id?: string;
     date: string;
-    type: HistoryType;
+    type: MovementsType;
+    quantity: number;
     StorageId?: string;
     UserId?: string;
     StockId?: string;
 }
 
-export enum HistoryType {
+export enum MovementsType {
     entrada = "ENTRADA",
     salida = "SALIDA"
 }

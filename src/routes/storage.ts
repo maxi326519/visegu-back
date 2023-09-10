@@ -5,14 +5,18 @@ import {createStorage, getAllStorage, updateStorage, deleteStorage, disableStora
 const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
-    try {
-      const storageData = req.body;
-      const newStorage = await createStorage(storageData);
-      res.status(201).json(newStorage);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+  try {
+    const { name } = req.body;
+    if (!name) {
+    return res.status(400).json({ message: 'The "name" field is required' });
     }
-  });
+    const newStorage = await createStorage(name);
+    res.status(201).json(newStorage);
+  } catch (error) {
+    console.error('Error creating storage:', error);
+    res.status(500).json({ message: 'Error creating storage' });
+  }
+});
 
 router.get('/', async (req: Request, res: Response) => {
     try {

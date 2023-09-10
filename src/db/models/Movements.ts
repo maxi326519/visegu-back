@@ -1,6 +1,6 @@
 export const model = (sequelize: any, DataTypes: any) => {
     sequelize.define(
-      "History",
+      "Movements",
       {
         id: {
           type: DataTypes.UUID,
@@ -14,9 +14,13 @@ export const model = (sequelize: any, DataTypes: any) => {
         type: {
          type: DataTypes.ENUM("ENTRADA", "SALIDA"),
          allowNull: false,
-        }
+        },
+        quantity: { 
+          type: DataTypes.INTEGER,
+          allowNull: false,
+         },
       },
-      { updatedAt: false }
+      { updatedAt: false, timestamps: false }
     );
   };
   

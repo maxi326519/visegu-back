@@ -1,7 +1,6 @@
 import { User } from "../../../db";
 
 const setUser = async (user: any) => {
-  if (!user.rol) throw new Error("missing parameter (rol)");
   if (!user.name) throw new Error("missing parameter (name)");
   if (!user.email) throw new Error("missing parameter (email)");
   if (!user.password) throw new Error("missing parameter (password)");
@@ -25,13 +24,20 @@ const getUser = async (name: string, value: any) => {
 
   const user = await User.findOne({
     where: { [name]: value },
+    attributes: {
+      exclude: ['password'],
+    },
   });
 
   return user;
 };
 
 const getAllUsers = async () => {
-  const allUsers = await User.findAll();
+  const allUsers = await User.findAll({
+    attributes: {
+      exclude: ['password'],
+    },
+  });
 
   return allUsers;
 };
@@ -53,16 +59,25 @@ const updateUser = async (updateUser: any) => {
   user.update(updateUser);
 };
 
-const disableUser = async (id: string) => {
-    const user: any = await User.findOne({
-      where: { id: id },
-    });
-    if (user) {
-      user.disabled = true;
-      await user.save();
-    } else {
-      throw new Error("User not found");
+const disableUser = async (id: string, disabled: boolean) => {
+  const user: any = await User.findOne({
+    where: { id: id },
+  });
+  if (user) {
+    user.disabled = disabled;
+    await user.save();
+  } else {
+    throw new Error("User not found");
+  }
+};
+
+  const deleteUser = async (userId: string) => {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error('User not found');
     }
+    await user.destroy();
+    return { message: 'Successfully deleted user' };
   };
 
-export { setUser, getUser, getAllUsers, updateUser, disableUser };
+export { setUser, getUser, getAllUsers, updateUser, disableUser, deleteUser };

@@ -50,7 +50,7 @@ for (const modelDefiner of modelDefiners) {
 // Para relacionarlos hacemos un destructuring
 export const {
   Categories,
-  History,
+  Movements,
   Product,
   Stock,
   Storage,
@@ -64,18 +64,18 @@ Product.hasMany(Stock);
 
 Stock.belongsTo(Storage);
 Stock.belongsTo(Product);
-Stock.hasMany(History);
+Stock.hasMany(Movements);
 
 Storage.hasMany(Stock);
 Storage.belongsToMany(User, { through: "StorageUser" });
-Storage.hasMany(History);
+Storage.hasMany(Movements);
 
 User.belongsToMany(Storage, { through: "StorageUser" });
-User.hasMany(History);
+User.hasMany(Movements);
 
-History.belongsTo(User);
-History.belongsTo(Storage);
-History.belongsTo(Stock);
+Movements.belongsTo(User);
+Movements.belongsTo(Storage);
+Movements.belongsTo(Stock);
 
 export const conn = sequelize;
 export const models = sequelize.models;

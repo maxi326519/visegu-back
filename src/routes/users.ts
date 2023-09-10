@@ -6,6 +6,7 @@ import {
   getAllUsers,
   updateUser,
   disableUser,
+  deleteUser,
 } from "./controllers/users";
 
 const router = Router();
@@ -32,20 +33,19 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get-user/:name/:value', async (req: Request, res: Response) => {
-    try {
-      const { name, value } = req.params;
-      const user = await getUser(name, value);
-  
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      }
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+router.get('/:name/:value', async (req, res) => {
+  try {
+    const { name, value } = req.params;
+    const user = await getUser(name, value);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-  });
+    return res.json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error al buscar el usuario' });
+  }
+});
 
 router.get("/", async (_, res: Response) => {
   try {
@@ -66,13 +66,32 @@ router.patch("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/:id', async (req: Request, res: Response) => {
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { disabled } = req.body;
+
+    if (disabled === undefined) {
+      throw new Error('The "disable" field is required in the request body');
+    }
+
+    await disableUser(id, disabled);
+
+    res.json({ message: `User ${disabled ? 'disabled' : 'enabled'} successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error changing user status' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      await disableUser(id);
-      res.status(200).json({ message: 'User successfully disabled' });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      const result = await deleteUser(id);
+      res.json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting user' });
     }
   });
   

@@ -11,12 +11,12 @@ export const model = (sequelize: any, DataTypes: any) => {
          type: DataTypes.STRING,
          allowNull: false,
         },
-        diabled: {
+        disabled: {
           type: DataTypes.BOOLEAN,
-          allowNull: false,
+          defaultValue: false,
         }
       },
-      { updatedAt: false }
+      { updatedAt: false, timestamps: false }
     );
   };
   
