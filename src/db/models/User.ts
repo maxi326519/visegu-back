@@ -10,6 +10,7 @@ export const model = (sequelize: any, DataTypes: any) => {
         rol: {
           type: DataTypes.ENUM("ADMIN", "USER"),
           allowNull: false,
+          defaultValue: "USER",
         },
         name: {
           type: DataTypes.STRING,
@@ -25,10 +26,10 @@ export const model = (sequelize: any, DataTypes: any) => {
         },
         disabled: {
           type: DataTypes.BOOLEAN,
-          allowNull: false
+          defaultValue: false,
         }
       },
-      { updatedAt: false }
+      { updatedAt: false, timestamps: false }
     );
   };
   

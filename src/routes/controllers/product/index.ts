@@ -31,15 +31,16 @@ const updateProducts = async (product: any) => {
     console.log(`Product with ID ${productId} successfully removed.`);
   };
 
-  const disableProduct = async (productId: string) => {
-    const product = await Product.findOne({ where: { id: productId } });
-  
-    if (!product) {
+  const disableProduct = async (id: string, disabled: boolean) => {
+    const product: any = await Product.findOne({
+      where: { id: id },
+    });
+    if (product) {
+      product.disabled = disabled;
+      await product.save();
+    } else {
       throw new Error("Product not found");
     }
-    await product.update({ disabled: true });
-  
-    console.log(`Product with ID ${productId} successfully disabled.`);
   };
 
   export {createProduct, getAllProducts, updateProducts, deleteProduct, disableProduct}

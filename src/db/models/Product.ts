@@ -17,9 +17,9 @@ export const model = (sequelize: any, DataTypes: any) => {
       },
       disabled: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        defaultValue: false,
       }
     },
-    { updatedAt: false }
+    { updatedAt: false, timestamps: false }
   );
 };

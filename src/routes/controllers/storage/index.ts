@@ -1,9 +1,11 @@
 import { Storage } from "../../../db";
 
-const createStorage = async (storageData: string) => {
-      const newStorage = await Storage.create({ name: storageData });
-      return newStorage;
-  };
+const createStorage = async (name: string) => {
+  const newStorage = await Storage.create({
+    name: name,
+  });
+  return newStorage;
+};
 
 const getAllStorage = async () => {
     const storage = await Storage.findAll();

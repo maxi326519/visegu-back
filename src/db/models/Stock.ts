@@ -12,7 +12,7 @@ export const model = (sequelize: any, DataTypes: any) => {
          allowNull: false,
         },
       },
-      { updatedAt: false }
+      { updatedAt: false, timestamps: false }
     );
   };
   
