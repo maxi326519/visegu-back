@@ -43,4 +43,4 @@ const updateProducts = async (product: any) => {
     }
   };
 
-  export {createProduct, getAllProducts, updateProducts, deleteProduct, disableProduct}
+  export {createProduct, getAllProducts, updateProducts, deleteProduct, disableProduct};

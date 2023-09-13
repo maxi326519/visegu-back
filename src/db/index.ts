@@ -61,6 +61,7 @@ Categories.hasMany(Product);
 
 Product.belongsTo(Categories);
 Product.hasMany(Stock);
+Product.hasMany(Movements)
 
 Stock.belongsTo(Storage);
 Stock.belongsTo(Product);
@@ -76,6 +77,7 @@ User.hasMany(Movements);
 Movements.belongsTo(User);
 Movements.belongsTo(Storage);
 Movements.belongsTo(Stock);
+Movements.belongsTo(Product)
 
 export const conn = sequelize;
 export const models = sequelize.models;

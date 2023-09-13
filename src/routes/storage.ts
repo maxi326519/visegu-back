@@ -6,15 +6,14 @@ const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
-    if (!name) {
-    return res.status(400).json({ message: 'The "name" field is required' });
+    const { name, userId } = req.body;
+    if (!name || !userId || userId.length === 0) {
+      return res.status(400).json({ error: 'The "name" parameter is required and "userId" must be a non-empty array.' });
     }
-    const newStorage = await createStorage(name);
-    res.status(201).json(newStorage);
-  } catch (error) {
-    console.error('Error creating storage:', error);
-    res.status(500).json({ message: 'Error creating storage' });
+    const newStorage = await createStorage(name, userId);
+    res.status(200).json(newStorage);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -27,17 +26,17 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
 
-router.patch("/", async (req: Request, res: Response) => {
+  router.post('/', async (req: Request, res: Response) => {
     try {
-      const storage = req.body;
-      await updateStorage(storage);
-      res.status(200).json({ message: "Storage updated successfully" });
+      const { storage, userId } = req.body;
+      const existingUserIds = await updateStorage(storage, userId);
+      res.status(200).json(existingUserIds);
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
-  }
-});
+      res.status(500).json({ error: error.message });
+    }
+  });
 
-router.delete('/storage/:storageId', async (req: Request, res: Response) => {
+router.delete('/:storageId', async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       await deleteStorage(id);
@@ -47,7 +46,7 @@ router.delete('/storage/:storageId', async (req: Request, res: Response) => {
     }
   });
 
-router.patch('/storage/disable/:storageId', async (req: Request, res: Response) => {
+router.patch('/disable/:storageId', async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       await disableStorage(id);
