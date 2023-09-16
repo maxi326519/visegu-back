@@ -1,4 +1,6 @@
-import { User } from "../../../db";
+const bcrypt = require("bcrypt");
+const { User } = require("../../../db");
+const jwt = require("jsonwebtoken");
 
 const setUser = async (user: any) => {
   if (!user.name) throw new Error("missing parameter (name)");
@@ -11,11 +13,20 @@ const setUser = async (user: any) => {
   if (alreadyUser) throw new Error("user already exists");
 
   const alreadyEmail = await User.findOne({
-    where: { name: user.email },
+    where: { email: user.email }, // Debes buscar por "email" en lugar de "name"
   });
   if (alreadyEmail) throw new Error("user already exists");
 
-  const newUser = await User.create(user);
+  // Hashear la contraseña antes de almacenarla en la base de datos
+  const hashedPassword = await bcrypt.hash(user.password, 10); // 10 es el costo del algoritmo
+
+  // Crea un nuevo usuario con la contraseña hasheada
+  const newUser = await User.create({
+    name: user.name,
+    email: user.email,
+    password: hashedPassword, // Almacena la contraseña hasheada en la base de datos
+  });
+
   return newUser;
 };
 
@@ -80,4 +91,31 @@ const disableUser = async (id: string, disabled: boolean) => {
     return { message: 'Successfully deleted user' };
   };
 
-export { setUser, getUser, getAllUsers, updateUser, disableUser, deleteUser };
+
+  const loginUser = async (body: { email: string; password: string }) => {
+    // Busca el usuario en la base de datos
+    const user = await User.findOne({ where: { email: body.email } });
+    if (!user) {
+      throw new Error("Invalid email or password: User not found");
+    }
+    // Verifica la contraseña utilizando bcrypt
+    const isPasswordValid = await bcrypt.compare(body.password, user.password);
+  
+    if (!isPasswordValid) {
+      throw new Error("Invalid email or password: Incorrect password");
+    }
+  
+    // Genera un token JWT usando la clave secreta
+    const secretKey = process.env.SECRET_KEY;
+    const token = jwt.sign({ userId: user.id }, secretKey, {
+      expiresIn: "12d",
+    });
+  
+    if (user.disabled) {
+      return { user: 'This user is not allowed access' };
+    }
+  
+    return { message: "Login successful", user: user, token: token };
+  };
+
+export { setUser, getUser, getAllUsers, updateUser, disableUser, deleteUser, loginUser };

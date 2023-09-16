@@ -1,48 +1,133 @@
-import {Stock, Product, Storage} from "../../../db";
+import { Stock, Product, Storage } from "../../../db";
+import { MovementsType } from "../../../interfaces/MovementsTS";
+import { setMovements } from "../../controllers/movements";
 
-const createStock = async (quantity: number, ProductId: string, StorageId: string) => {
-    const newStock: any = await Stock.create({
-      quantity,
-    });
-    if (ProductId) {
-      const product = await Product.findByPk(ProductId);
-      if (product) {
-        await newStock.setProduct(product);
-      }
-    }
-    if (StorageId) {
-      const storage = await Storage.findByPk(StorageId);
-      if (storage) {
-        await newStock.setStorage(storage);
-      }
-    }
-    return newStock;
-  };
+const createStock = async (
+  quantity: number,
+  ProductId: string,
+  StorageId: string
+) => {
+  if (!ProductId) throw new Error("missing parameter ProductId");
+  if (!StorageId) throw new Error("missing parameter StorageId");
 
-  const updateStock = async (stockId: string, quantityToAdd: number) => {
-    const stock: any = await Stock.findByPk(stockId);
-    if (!stock) {
-      throw new Error(`Stock with ID ${stockId} was not found.`);
-    }
-    const currentQuantity = stock.quantity;
-    const newQuantity = currentQuantity + quantityToAdd;
-    await stock.update({ quantity: newQuantity });
-    return stock;
-  };
-  
-  const updateStockSubtract = async (stockId: string, quantityToSubtract: number) => {
-    const stock: any = await Stock.findByPk(stockId);
-    if (!stock) {
-      throw new Error(`El stock con ID ${stockId} no se encontró.`);
-    }
-    const currentQuantity = stock.quantity;
-    if (quantityToSubtract > currentQuantity) {
-      throw new Error(`La cantidad a restar es mayor que la cantidad actual en el stock.`);
-    }
-    const newQuantity = currentQuantity - quantityToSubtract;
-    await stock.update({ quantity: newQuantity });
-    return stock;
-  };
-  
+  // Crear un nuevo registro de stock
+  const newStock: any = await Stock.create({
+    quantity,
+  });
 
-  export {createStock, updateStock, updateStockSubtract};
+  // Asociar con un producto (si se proporciona ProductId)
+  if (ProductId) {
+    const product = await Product.findByPk(ProductId);
+    if (product) {
+      await newStock.setProduct(product);
+    }
+  }
+
+  // Asociar con un almacén (si se proporciona StorageId)
+  if (StorageId) {
+    const storage = await Storage.findByPk(StorageId);
+    if (storage) {
+      await newStock.setStorage(storage);
+    }
+  }
+
+  // Registrar movimientos y obtener el registro de movimientos asociado
+  const movementsRecord = await setMovements(
+    new Date(),
+    MovementsType.entrada,
+    quantity,
+    newStock.dataValues.id,
+    StorageId,
+    ProductId
+  );
+
+  // Devolver tanto el nuevo registro de stock como el registro de movimientos
+  return {
+    newStock,
+    movementsRecord,
+  };
+};
+
+
+const updateAddStock = async (id: string, quantity: number) => {
+  // Obtener el registro de stock y sus asociaciones
+  const stock: any = await Stock.findOne({
+    where: { id },
+    include: [
+      {
+        model: Product,
+        attributes: ["id"],
+      },
+      {
+        model: Storage,
+        attributes: ["id"],
+      },
+    ],
+  });
+
+  // Verificar si el registro de stock existe
+  if (!stock) throw new Error(`Stock not found`);
+
+  // Obtener la cantidad actual y calcular la nueva cantidad
+  const currentQuantity = stock.quantity;
+  const newQuantity = currentQuantity + quantity;
+
+  // Actualizar la cantidad de stock
+  await stock.update({ quantity: newQuantity });
+
+  // Crear el registro de movimientos y obtenerlo
+  const movementsRecord = await setMovements(
+    new Date(),
+    MovementsType.entrada,
+    quantity,
+    stock.dataValues.id,
+    stock.dataValues.Storage,
+    stock.dataValues.Product
+  );
+
+  // Devolver tanto el registro de stock actualizado como el registro de movimientos
+  return {
+    updatedStock: stock,
+    movementsRecord: movementsRecord,
+  };
+};
+
+
+const updateStockSubtract = async (stockId: string, quantity: number) => {
+  const stock: any = await Stock.findByPk(stockId);
+
+  if (!stock) throw new Error("Stock not found");
+
+  // Verificar si la cantidad a restar es mayor que la cantidad actual
+  const currentQuantity = stock.quantity;
+  if (quantity > currentQuantity) {
+    throw new Error(
+      `The quantity to be subtracted is greater than the current quantity in stock.`
+    );
+  }
+
+  // Calcular la nueva cantidad
+  const newQuantity = currentQuantity - quantity;
+
+  // Actualizar la cantidad de stock
+  await stock.update({ quantity: newQuantity });
+
+  // Crear el registro de movimientos y obtenerlo
+  const movementsRecord = await setMovements(
+    new Date(),
+    MovementsType.entrada,
+    quantity,
+    stock.dataValues.id,
+    stock.dataValues.StorageId,
+    stock.dataValues.ProductId
+  );
+
+  // Devolver tanto el registro de stock actualizado como el registro de movimientos
+  return {
+    updatedStock: stock,
+    movementsRecord: movementsRecord,
+  };
+};
+
+
+export { createStock, updateAddStock, updateStockSubtract };

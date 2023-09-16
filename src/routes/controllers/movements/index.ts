@@ -1,7 +1,7 @@
 import { Movements, Stock, Storage, Product, User } from "../../../db";
 
 const setMovements = async (
-  date: string,
+  date: Date,
   type: string,
   quantity: number,
   StockId: string,
@@ -10,14 +10,11 @@ const setMovements = async (
   UserId?: string
 ) => {
   if (!date) {
-    throw new Error('El parámetro "date" es requerido.');
+    throw new Error('The "date" parameter is required.');
   }
-  const parsedDate = new Date(date);
-  if (isNaN(parsedDate.getTime())) {
-    throw new Error('El formato de la fecha proporcionada es inválido.');
-  }
+
   const newMovements: any = await Movements.create({
-    date: parsedDate,
+    date,
     type,
     quantity,
     StockId,
@@ -52,4 +49,4 @@ const setMovements = async (
   return newMovements;
 };
 
-export {setMovements};
+export { setMovements };

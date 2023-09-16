@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import {createStock,updateStock, updateStockSubtract} from "./controllers/stock";
+import {createStock, updateAddStock, updateStockSubtract} from "./controllers/stock";
 
 const router = Router()
 
@@ -17,7 +17,7 @@ router.post('/', async (req: Request, res: Response) => {
 router.patch('/ingress', async (req: Request, res: Response) => {
     try {
       const { stockId, quantityToAdd } = req.body;
-      const updatedStock = await updateStock(stockId, quantityToAdd);
+      const updatedStock = await updateAddStock(stockId, quantityToAdd);
       res.status(200).json(updatedStock);
     } catch (error:any) {
       res.status(500).json({ error: error.message });
