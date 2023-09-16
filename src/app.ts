@@ -8,6 +8,7 @@ import user from "./routes/users";
 import products from "./routes/products";
 import categories from "./routes/categories";
 import storage from "./routes/storage";
+import stock from "./routes/stock";
 
 // Ceate app
 const app = express();
@@ -32,6 +33,7 @@ app.use("/users", user);
 app.use("/products", products)
 app.use("/categories", categories)
 app.use("/storages", storage)
+app.use("/stock", stock)
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.
