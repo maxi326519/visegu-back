@@ -48,7 +48,6 @@ const createStock = async (
   };
 };
 
-
 const updateAddStock = async (id: string, quantity: number) => {
   // Obtener el registro de stock y sus asociaciones
   const stock: any = await Stock.findOne({
@@ -92,7 +91,6 @@ const updateAddStock = async (id: string, quantity: number) => {
   };
 };
 
-
 const updateStockSubtract = async (stockId: string, quantity: number) => {
   const stock: any = await Stock.findByPk(stockId);
 
@@ -129,5 +127,35 @@ const updateStockSubtract = async (stockId: string, quantity: number) => {
   };
 };
 
+export function setTransfer(
+  date: string,
+  ProductId: string,
+  quantity: number,
+  StorageId: {
+    egress: string; // ID de storage de donde sale
+    ingress: string; // ID de storage de donde llega
+  }
+) {
+  // Traer el Stock del Storage de egreso
+
+  // Traer el Stock del Storage de ingreso
+
+  // Verificar si existe el Stock del Storage de ingreso
+  // Si no crearlo
+
+  // Restarle la cantidad al Stock del Storage de egreso (Update)
+
+  // Crear un movimiento de salida
+
+  // Sumarle la cantidad al Stock del Storage de ingreso (Update)
+
+  // Crear un movimiento de entrada
+
+  // Retornar los Stock, y los movimientos
+  return {
+    Stocks: [],
+    Movements: [],
+  };
+}
 
 export { createStock, updateAddStock, updateStockSubtract };
