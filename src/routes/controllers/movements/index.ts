@@ -7,7 +7,7 @@ const setMovements = async (
   StockId: string,
   StorageId: string,
   ProductId: string,
-  UserId?: string
+  UserId: string
 ) => {
   if (!date) {
     throw new Error('The "date" parameter is required.');

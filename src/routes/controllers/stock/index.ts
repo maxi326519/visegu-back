@@ -5,7 +5,8 @@ import { setMovements } from "../../controllers/movements";
 const createStock = async (
   quantity: number,
   ProductId: string,
-  StorageId: string
+  StorageId: string,
+  userId: string
 ) => {
   if (!ProductId) throw new Error("missing parameter ProductId");
   if (!StorageId) throw new Error("missing parameter StorageId");
@@ -38,7 +39,8 @@ const createStock = async (
     quantity,
     newStock.dataValues.id,
     StorageId,
-    ProductId
+    ProductId,
+    userId
   );
 
   // Devolver tanto el nuevo registro de stock como el registro de movimientos
@@ -48,7 +50,7 @@ const createStock = async (
   };
 };
 
-const updateAddStock = async (id: string, quantity: number) => {
+const updateAddStock = async (id: string, quantity: number, userId: string) => {
   // Obtener el registro de stock y sus asociaciones
   const stock: any = await Stock.findOne({
     where: { id },
@@ -81,7 +83,8 @@ const updateAddStock = async (id: string, quantity: number) => {
     quantity,
     stock.dataValues.id,
     stock.dataValues.Storage,
-    stock.dataValues.Product
+    stock.dataValues.Product,
+    userId
   );
 
   // Devolver tanto el registro de stock actualizado como el registro de movimientos
@@ -91,7 +94,7 @@ const updateAddStock = async (id: string, quantity: number) => {
   };
 };
 
-const updateStockSubtract = async (stockId: string, quantity: number) => {
+const updateStockSubtract = async (stockId: string, quantity: number, userId: string) => {
   const stock: any = await Stock.findByPk(stockId);
 
   if (!stock) throw new Error("Stock not found");
@@ -117,7 +120,8 @@ const updateStockSubtract = async (stockId: string, quantity: number) => {
     quantity,
     stock.dataValues.id,
     stock.dataValues.StorageId,
-    stock.dataValues.ProductId
+    stock.dataValues.ProductId,
+    userId
   );
 
   // Devolver tanto el registro de stock actualizado como el registro de movimientos
@@ -127,35 +131,89 @@ const updateStockSubtract = async (stockId: string, quantity: number) => {
   };
 };
 
-export function setTransfer(
+const setTransfer = async (
   date: string,
   ProductId: string,
   quantity: number,
   StorageId: {
-    egress: string; // ID de storage de donde sale
-    ingress: string; // ID de storage de donde llega
-  }
-) {
+  egress: string;
+  ingress: string;
+  },
+  userId: string,
+) => {
+console.log(StorageId);
+  // Convierte la cadena de fecha a un objeto Date
+  const transferDate = new Date(date);
+
   // Traer el Stock del Storage de egreso
+  const egressStock: any = await Stock.findOne({
+    where: {
+      StorageId: StorageId.egress,
+      ProductId: ProductId,
+    },
+  });
 
+  // Verificar si hay suficiente cantidad en el Stock del Storage de egreso
+  if (!egressStock || egressStock.quantity < quantity) {
+    throw new Error("There is not enough quantity in the Egress Storage Stock.");
+  }
+ console.log(egressStock);
   // Traer el Stock del Storage de ingreso
-
+  const ingressStock: any = await Stock.findOne({
+    where: {
+      StorageId: StorageId.ingress,
+      ProductId: ProductId,
+    },
+  });
+  console.log(ingressStock);
   // Verificar si existe el Stock del Storage de ingreso
-  // Si no crearlo
+  // Si no existe, crearlo
+  if (!ingressStock) {
+      await Stock.create({
+      StorageId: StorageId.ingress,
+      ProductId: ProductId,
+      quantity: quantity,
+    });
+  }
 
   // Restarle la cantidad al Stock del Storage de egreso (Update)
+  const newEgressQuantity = egressStock.quantity - quantity;
+  await egressStock.update({ quantity: newEgressQuantity });
 
   // Crear un movimiento de salida
+  const egressMovement = await setMovements(
+    transferDate,
+    MovementsType.salida,
+    quantity,
+    egressStock.id,
+    StorageId.egress,
+    ProductId,
+    userId,
+  );
 
   // Sumarle la cantidad al Stock del Storage de ingreso (Update)
+  const newIngressQuantity = ingressStock ? Number(ingressStock.quantity) + Number(quantity) : quantity;
+  if (ingressStock) {
+    await ingressStock.update({ quantity: newIngressQuantity });
+  }
 
   // Crear un movimiento de entrada
+  const ingressMovement = await setMovements(
+    transferDate,
+    MovementsType.entrada,
+    quantity,
+    ingressStock.id,
+    StorageId.ingress,
+    ProductId,
+    userId
+  );
 
-  // Retornar los Stock, y los movimientos
+  // Retornar los Stocks y los movimientos
   return {
-    Stocks: [],
-    Movements: [],
+    Stocks: [egressStock, ingressStock],
+    Movements: [egressMovement, ingressMovement],
   };
-}
+};
 
-export { createStock, updateAddStock, updateStockSubtract };
+
+export { createStock, updateAddStock, updateStockSubtract, setTransfer };
