@@ -9,6 +9,8 @@ import products from "./routes/products";
 import categories from "./routes/categories";
 import storage from "./routes/storage";
 import stock from "./routes/stock";
+import { verificarToken } from "./routes/controllers/verificacion";
+import login from "./routes/login";
 
 // Ceate app
 const app = express();
@@ -29,11 +31,12 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(morgan("dev"));
 
 // Use routes
-app.use("/users", user);
-app.use("/products", products)
-app.use("/categories", categories)
-app.use("/storages", storage)
-app.use("/stock", stock)
+app.use("/login", login);
+app.use("/users",verificarToken, user);
+app.use("/products",verificarToken, products);
+app.use("/categories",verificarToken, categories);
+app.use("/storages",verificarToken, storage);
+app.use("/stock",verificarToken, stock)
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.

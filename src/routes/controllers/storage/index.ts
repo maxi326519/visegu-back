@@ -54,7 +54,7 @@ const getAllStorage = async () => {
     name: storage.name,
     disabled: storage.disabled,
     UserId: storage.Users.map((user: UserTS) => user.id),
-  }))[0];
+  }));
 
   return returnStorage;
 };
