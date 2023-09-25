@@ -7,7 +7,7 @@ export const model = (sequelize: any, DataTypes: any) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      descripcion: { 
+      description: { 
        type: DataTypes.STRING,
        allowNull: false,
       },

@@ -17,6 +17,7 @@ router.post("/", async (req: Request, res: Response) => {
     const response = await setUser(user);
     res.status(200).json(response);
   } catch (error: any) {
+    console.log(error);
     switch (error.errors?.[0].type) {
       case "unique violation":
         res.status(400).send({ error: error.errors[0].message });
@@ -33,17 +34,17 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:name/:value', async (req, res) => {
+router.get("/:name/:value", async (req, res) => {
   try {
     const { name, value } = req.params;
     const user = await getUser(name, value);
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({ message: "Usuario no encontrado" });
     }
     return res.json(user);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error al buscar el usuario' });
+    return res.status(500).json({ message: "Error al buscar el usuario" });
   }
 });
 
@@ -66,7 +67,7 @@ router.patch("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { disabled } = req.body;
@@ -77,23 +78,24 @@ router.patch('/:id', async (req, res) => {
 
     await disableUser(id, disabled);
 
-    res.json({ message: `User ${disabled ? 'disabled' : 'enabled'} successfully` });
+    res.json({
+      message: `User ${disabled ? "disabled" : "enabled"} successfully`,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error changing user status' });
+    res.status(500).json({ message: "Error changing user status" });
   }
 });
 
-router.delete('/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const result = await deleteUser(id);
-      res.json(result);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error deleting user' });
-    }
-  });
-  
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await deleteUser(id);
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting user" });
+  }
+});
 
 export default router;

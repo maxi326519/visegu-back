@@ -1,6 +1,6 @@
 export interface ProductTS {
     id?: String;
-    descripcion: String;
+    description: String;
     skunUmber: string;
     CategoryId?: string;
 }

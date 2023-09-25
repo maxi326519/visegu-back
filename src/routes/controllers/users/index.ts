@@ -6,15 +6,10 @@ const setUser = async (user: any) => {
   if (!user.email) throw new Error("missing parameter (email)");
   if (!user.password) throw new Error("missing parameter (password)");
 
-  const alreadyUser = await User.findOne({
-    where: { name: user.name },
-  });
-  if (alreadyUser) throw new Error("user already exists");
-
   const alreadyEmail = await User.findOne({
     where: { email: user.email }, // Debes buscar por "email" en lugar de "name"
   });
-  if (alreadyEmail) throw new Error("user already exists");
+  if (alreadyEmail) throw new Error("email already exists");
 
   // Hashear la contraseña antes de almacenarla en la base de datos
   const hashedPassword = await bcrypt.hash(user.password, 10); // 10 es el costo del algoritmo
@@ -35,7 +30,7 @@ const getUser = async (name: string, value: any) => {
   const user = await User.findOne({
     where: { [name]: value },
     attributes: {
-      exclude: ['password'],
+      exclude: ["password"],
     },
   });
 
@@ -45,7 +40,7 @@ const getUser = async (name: string, value: any) => {
 const getAllUsers = async () => {
   const allUsers = await User.findAll({
     attributes: {
-      exclude: ['password'],
+      exclude: ["password"],
     },
   });
 
@@ -81,13 +76,13 @@ const disableUser = async (id: string, disabled: boolean) => {
   }
 };
 
-  const deleteUser = async (userId: string) => {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-    await user.destroy();
-    return { message: 'Successfully deleted user' };
-  };
+const deleteUser = async (userId: string) => {
+  const user = await User.findByPk(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  await user.destroy();
+  return { message: "Successfully deleted user" };
+};
 
-export { setUser, getUser, getAllUsers, updateUser, disableUser, deleteUser};
+export { setUser, getUser, getAllUsers, updateUser, disableUser, deleteUser };
