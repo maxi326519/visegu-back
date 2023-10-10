@@ -16,7 +16,6 @@ router.post("/", async (req: Request, res: Response) => {
     const newProduct = await createProduct(productData);
     res.status(201).json(newProduct);
   } catch (error: any) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });

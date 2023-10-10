@@ -17,13 +17,14 @@ const app = express();
 
 // Cors options
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "*",
   credentials: true,
   methods: "GET, PATCH, POST, OPTIONS, PUT, DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, authorization",
 };
 
 // app config
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
@@ -32,11 +33,11 @@ app.use(morgan("dev"));
 
 // Use routes
 app.use("/login", login);
-app.use("/users",verificarToken, user);
-app.use("/products",verificarToken, products);
-app.use("/categories",verificarToken, categories);
-app.use("/storages",verificarToken, storage);
-app.use("/stock",verificarToken, stock)
+app.use("/users", verificarToken, user);
+app.use("/products", verificarToken, products);
+app.use("/categories", verificarToken, categories);
+app.use("/storages", verificarToken, storage);
+app.use("/stock", verificarToken, stock);
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.

@@ -7,7 +7,7 @@ const setMovements = async (
   StockId: string,
   StorageId: string,
   ProductId: string,
-  UserId: string
+  UserId?: string
 ) => {
   if (!date) {
     throw new Error('The "date" parameter is required.');
@@ -17,11 +17,10 @@ const setMovements = async (
     date,
     type,
     quantity,
-    StockId,
-    StorageId,
-    ProductId,
-    UserId,
   });
+
+  console.log("Movement", date, type, quantity, StockId, StorageId, ProductId, UserId);
+
   if (StockId) {
     const stock = await Stock.findByPk(StockId);
     if (stock) {

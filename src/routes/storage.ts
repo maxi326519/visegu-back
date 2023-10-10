@@ -16,6 +16,7 @@ router.post("/", async (req: Request, res: Response) => {
     const newStorage = await createStorage(name, UserId);
     res.status(200).json(newStorage);
   } catch (error: any) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });
