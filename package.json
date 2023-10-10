@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
     "start": "node ./build/index.js",
-    "start-pm2": "pom2 ./build/index.js",
+    "start-pm2": "pm2 start ./build/index.js",
     "build": "tsc",
     "test": "npx jest",
     "test 01": "npx jest ./01-supplier.test.js",
