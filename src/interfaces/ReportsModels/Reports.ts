@@ -1,7 +1,7 @@
 import { Inspection } from "./Inspection";
-import { WorkReport } from "./Work";
+import { WorkReportTS } from "./Work";
 
-export type Report = WorkReport | Inspection;
+export type Report = WorkReportTS | Inspection;
 
 export enum ReportTypes {
   ANY,

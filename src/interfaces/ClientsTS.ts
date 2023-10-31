@@ -1,4 +1,4 @@
-interface Clients {
+export interface ClientsTS {
   id?: string;
   name: string;
   customer: string;
