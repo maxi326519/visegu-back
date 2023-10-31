@@ -5,6 +5,7 @@ const createProduct = async (productData: any) => {
   const newProduct = await Product.create({
     description: productData.description,
     skuNumber: productData.skuNumber,
+    amount: productData.amount,
   });
   
   return newProduct;

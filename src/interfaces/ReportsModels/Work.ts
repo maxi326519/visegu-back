@@ -1,4 +1,4 @@
-export interface WorkReport {
+export interface WorkReportTS {
   id?: "";
   customer: string;
   location: string;
@@ -35,7 +35,7 @@ export interface WorkReportError {
   table: string;
 }
 
-export const initWorkReport = (): WorkReport => ({
+export const initWorkReport = (): WorkReportTS => ({
   customer: "",
   location: "",
   timeToStartServices: "",

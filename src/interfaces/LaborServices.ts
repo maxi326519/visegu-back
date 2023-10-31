@@ -1,4 +1,4 @@
-interface LaborServices {
+export interface LaborServicesTS {
   id?: string;
   codeNumber: string;
   name: string;
