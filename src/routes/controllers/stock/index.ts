@@ -26,6 +26,9 @@ const createStock = async (
   if (!storage) throw new Error("Storage not found");
   await newStock.setStorage(storage);
 
+  // Update product amount
+  await product.update({ amount: quantity });
+
   // Create the movement
   const newMovement = await setMovements(
     new Date(),
@@ -40,6 +43,7 @@ const createStock = async (
   // Return the new Stock and Movement
   return {
     Stock: newStock,
+    Product: product,
     Movement: newMovement,
   };
 };
@@ -58,13 +62,17 @@ const setIngress = async (
   if (!StockId) throw new Error("missing parameter: StockId");
   if (!quantity) throw new Error("missing parameter: quantity");
 
-  // Get the tock
+  // Get the tock, add the amount and save
   const stock: any = await Stock.findByPk(StockId);
   if (!stock) throw new Error(`Stock not found`);
-
-  // Add the amount and save
-  stock.quantity += Number(quantity);
+  stock.quantity = Number(stock.quantity) + Number(quantity);
   await stock.save();
+
+  // Get and update product amount
+  const product: any = await Product.findOne({ where: { id: stock.dataValues.ProductId } });
+  if (!product) throw new Error("Product not found");
+  product.amount = Number(product.amount) + Number(quantity);
+  await product.save();
 
   // Create the movement
   const movement = await setMovements(
@@ -80,6 +88,7 @@ const setIngress = async (
   // Return the updated stock and the new movement
   return {
     Stock: stock,
+    Product: product,
     Movement: movement,
   };
 };
@@ -89,17 +98,18 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
   if (!StockId) throw new Error("missing parameter: StockId");
   if (!quantity) throw new Error("missing parameter: quantity");
 
-  // Get the tock
+  // Get the tock, check quantity and subtract the amount
   const stock: any = await Stock.findByPk(StockId);
   if (!stock) throw new Error(`Stock not found`);
-
-  console.log(stock.quantity, Number(quantity));
-
   if (stock.quantity < Number(quantity)) throw new Error("Insufficient Stock");
-
-  // Subtract the amount and save
-  stock.quantity -= Number(quantity);
+  stock.quantity = Number(stock.quantity) - Number(quantity);
   await stock.save();
+
+  // Get and update product amount
+  const product: any = await Product.findOne({ where: { id: stock.dataValues.ProductId } });
+  if (!product) throw new Error("Product not found");
+  product.amount = Number(product.amount) - Number(quantity);
+  await product.save();
 
   // Create the ingress movement
   const movement = await setMovements(
@@ -115,6 +125,7 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
   // Return the updated stock and the new movement
   return {
     Stock: stock,
+    Product: product,
     Movement: movement,
   };
 };
@@ -140,8 +151,6 @@ const setTransfer = async (
   // Get the esgress Storage
   const egressStock: any = await Stock.findByPk(StockId);
 
-  console.log(egressStock);
-  console.log(1);
 
   // Check if Storage exist, and is enough quantity in stock
   if (!egressStock) throw new Error("Egress stock not found");
@@ -156,12 +165,10 @@ const setTransfer = async (
     },
   });
 
-  console.log(2);
-
   // Check if the stock in this storage already exist
   if (ingressStock) {
     // Add new amounts
-    ingressStock.quantity += Number(quantity);
+    ingressStock.quantity = Number(ingressStock.quantity) + Number(quantity);
     await ingressStock.save();
   } else {
     // Else create it
@@ -172,10 +179,8 @@ const setTransfer = async (
     });
   }
 
-  console.log(3);
-
   // Subtract the quantity and save
-  egressStock.quantity -= Number(quantity);
+  egressStock.quantity = Number(egressStock.quantity) - Number(quantity);
   await egressStock.save();
 
   // Create the egress movement
@@ -189,8 +194,6 @@ const setTransfer = async (
     userId
   );
 
-  console.log(4);
-
   // Create the ingress movement
   const ingressMovement = await setMovements(
     new Date(date),
@@ -201,8 +204,6 @@ const setTransfer = async (
     egressStock.ProductId,
     userId
   );
-
-  console.log(5);
 
   // Return the Stocks and movements
   return {

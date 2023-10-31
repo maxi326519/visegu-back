@@ -58,11 +58,16 @@ export const {
   WorkReport,
   WorkReportsDetails,
   InspectionReport,
+  Clients,
+  Suppliers,
+  LaborServices
 } = sequelize.models;
 
 Categories.hasMany(Product);
+Suppliers.hasMany(Product);
 
 Product.belongsTo(Categories);
+Product.belongsTo(Suppliers);
 Product.hasMany(Stock);
 Product.hasMany(Movements);
 
@@ -71,12 +76,9 @@ Stock.belongsTo(Product);
 Stock.hasMany(Movements);
 
 Storage.hasMany(Stock);
-Storage.belongsToMany(User, { through: "StorageUser" });
 Storage.hasMany(Movements);
 
-User.belongsToMany(Storage, { through: "StorageUser" });
 User.hasMany(Movements);
-
 User.hasMany(WorkReport);
 User.hasMany(InspectionReport);
 

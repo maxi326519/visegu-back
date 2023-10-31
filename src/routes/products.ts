@@ -16,6 +16,7 @@ router.post("/", async (req: Request, res: Response) => {
     const newProduct = await createProduct(productData);
     res.status(201).json(newProduct);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -25,6 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
     const products = await getAllProducts();
     res.status(200).json(products);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -35,6 +37,7 @@ router.patch("/", async (req: Request, res: Response) => {
     await updateProducts(product);
     res.status(200).json({ message: "Product updated successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -47,6 +50,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
       .status(200)
       .json({ message: `Product with ID ${id} successfully removed.` });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });

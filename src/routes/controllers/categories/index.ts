@@ -35,8 +35,3 @@ const deleteCategory = async (categoryId: string) => {
   
   export {createCategory, getAllCategories, updateCategory, deleteCategory};
   
-  
-  
-  
-  
-  

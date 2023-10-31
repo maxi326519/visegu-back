@@ -1,3 +1,3 @@
 export interface UserTS {
-    user?: string;
+  user?: string;
 }
