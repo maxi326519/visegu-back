@@ -1,4 +1,4 @@
-export interface CategoriesTS {
+interface Suppliers {
   id?: string;
   name: string;
 }

@@ -55,29 +55,43 @@ export const {
   Stock,
   Storage,
   User,
+  WorkReport,
+  WorkReportsDetails,
+  InspectionReport,
+  Clients,
+  Suppliers,
+  LaborServices
 } = sequelize.models;
 
 Categories.hasMany(Product);
+Suppliers.hasMany(Product);
 
 Product.belongsTo(Categories);
+Product.belongsTo(Suppliers);
 Product.hasMany(Stock);
-Product.hasMany(Movements)
+Product.hasMany(Movements);
 
 Stock.belongsTo(Storage);
 Stock.belongsTo(Product);
 Stock.hasMany(Movements);
 
 Storage.hasMany(Stock);
-Storage.belongsToMany(User, { through: "StorageUser" });
 Storage.hasMany(Movements);
 
-User.belongsToMany(Storage, { through: "StorageUser" });
 User.hasMany(Movements);
+User.hasMany(WorkReport);
+User.hasMany(InspectionReport);
 
 Movements.belongsTo(User);
 Movements.belongsTo(Storage);
 Movements.belongsTo(Stock);
-Movements.belongsTo(Product)
+Movements.belongsTo(Product);
+
+WorkReport.belongsTo(User);
+WorkReport.hasMany(WorkReportsDetails);
+WorkReportsDetails.belongsTo(WorkReport);
+
+InspectionReport.belongsTo(User);
 
 export const conn = sequelize;
 export const models = sequelize.models;

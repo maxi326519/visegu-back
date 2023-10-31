@@ -1,28 +1,19 @@
 export const model = (sequelize: any, DataTypes: any) => {
   sequelize.define(
-    "Product",
+    "LaborServices",
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      description: {
+      codeNumber: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      skuNumber: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      amount: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      disabled: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
       }
     },
     { updatedAt: false, timestamps: false }

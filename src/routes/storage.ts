@@ -13,9 +13,10 @@ const router = Router();
 router.post("/", async (req: Request, res: Response) => {
   try {
     const { name, UserId } = req.body;
-    const newStorage = await createStorage(name, UserId);
+    const newStorage = await createStorage(name);
     res.status(200).json(newStorage);
   } catch (error: any) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -32,7 +33,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.patch("/", async (req: Request, res: Response) => {
   try {
     const { id, name, UserId } = req.body;
-    const existingUserIds = await updateStorage(id, name, UserId);
+    const existingUserIds = await updateStorage(id, name);
     res.status(200).json(existingUserIds);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
