@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001;
 
 // Inicialización
 conn.sync({ force: false }).then(async () => {
-// First user
+  // First user
   const user = {
     name: "ADMIN",
     password: "321654",
@@ -22,7 +22,9 @@ conn.sync({ force: false }).then(async () => {
     name: user.name,
     password: hashedPassword,
     email: user.email,
-  });
+  })
+    .then(() => console.log("Admin created"))
+    .catch(((error) => console.log(error)))
 
   // Open server
   app.listen(PORT, () => {
