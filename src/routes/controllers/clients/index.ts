@@ -1,7 +1,6 @@
-import { ClientsTS } from "../../../interfaces/ClientsTS";
 const { Clients } = require("../../../db");
 
-const createClient = async (clientData: ClientsTS) => {
+const createClient = async (clientData: any) => {
     if (!clientData.name) throw new Error("Missing parameter: name");
     if (!clientData.email) throw new Error("Missing parameter: email");
     if (!clientData.phoneNumber) throw new Error("Missing parameter: phoneNumber");
@@ -28,26 +27,30 @@ const getAllClients= async () => {
   return clients;
 }
 
-const updateClient = async (clientId: string, updatedData: ClientsTS) => {
-  const client = await Clients.findByPk(clientId);
+// Define la función para actualizar un Client por su ID
+const updateClient = async (clientData: any) => {
+  const response = await Clients.findOne({
+    where: { id: clientData.id },
+  });
 
-  if (!client) {
-    throw new Error('Client not found');
+  if (response) {
+    await response.update(clientData);
+  } else {
+    throw new Error("clientData not found");
   }
+};
 
-  await client.update(updatedData);
-  return client;
-}
-
-const deleteClient = async (clientId: string) => {
-  const client = await Clients.findByPk(clientId);
+// Define la función para eliminar un Client por su ID
+const deleteClient = async (id: string) => {
+  const client = await Clients.findOne({ where: { id } });
 
   if (!client) {
-    throw new Error('Cliente no encontrado');
+    throw new Error("client not found");
   }
 
   await client.destroy();
-  return client;
+
+  return true; // Client eliminada con éxito
 }
 
 export {createClient, getAllClients, updateClient, deleteClient}
