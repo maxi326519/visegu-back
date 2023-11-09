@@ -6,7 +6,7 @@ require("./db");
 const PORT = process.env.PORT || 3001;
 
 // Inicialización
-conn.sync({ force: false }).then(async () => {
+conn.sync({ force: true }).then(async () => {
   // First user
   const user = {
     name: "ADMIN",

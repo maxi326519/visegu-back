@@ -1,6 +1,5 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { createWorkReport, deleteWorkReport, getAllWorkReports, updateWorkReport } from "./controllers/workReport";
-import { WorkReportTS } from "../interfaces/ReportsModels/Work";
 
 const router = Router();
 
@@ -26,29 +25,33 @@ router.get('/', async (req, res) => {
     }
   });
 
-  // Ruta para actualizar un informe de trabajo
-router.patch('/:id', async (req, res) => {
-    const {id} = req.params;
-    const updatedData: WorkReportTS = req.body;
-  
-    try {
-      const updatedReport = await updateWorkReport(id, updatedData);
-      res.json(updatedReport);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
+// Ruta para actualizar un informe de trabajo por su ID
+router.patch('/:id', async (req: Request, res: Response) => {
+  const {id} = req.params;
+  const updatedInspectionData = req.body;
 
-// Ruta para eliminar un informe de trabajo
-router.delete('/:id', async (req, res) => {
-    const {id} = req.params;
-  
-    try {
-      await deleteWorkReport(id);
-      res.json({ message: 'Job report successfully deleted' });
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
+  try {
+    await updateWorkReport({ id, ...updatedInspectionData });
+    res.status(200).json({ message: 'workreport successfully updated' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating workreport report' });
+  }
+});
+
+// Ruta para eliminar un informe de trabajo por su ID
+router.delete('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  try {
+    const isDeleted = await deleteWorkReport(id);
+    if (isDeleted) {
+      res.status(200).json({ message: 'Job report successfully deleted' });
+    } else {
+      res.status(404).json({ error: 'Job report not found' });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting job report' });
+  }
+});
 
 export default router;

@@ -15,29 +15,30 @@ const getAllWorkReports = async()=> {
     return workReports;
   }
 
-const updateWorkReport = async (reportId: string, updatedData: WorkReportTS)=> {
-    const existingReport = await WorkReport.findByPk(reportId);
+ // Define la función para actualizar un informe de inspección por su ID
+ const updateWorkReport = async (workData: any) => {
+  const response = await WorkReport.findOne({
+    where: { id: workData.id },
+  });
+
+  if (response) {
+    await response.update(workData);
+  } else {
+    throw new Error("WorkData not found");
+  }
+};
+
+  // Define la función para eliminar una inspección por su ID
+  const deleteWorkReport = async (id: string) => {
+    const workReport = await WorkReport.findOne({ where: { id } });
   
-    if (!existingReport) {
-      throw new Error('Job report not found');
+    if (!workReport) {
+      throw new Error("WorkReport not found");
     }
   
-    // Realiza la actualización con los nuevos datos proporcionados
-    const updatedReport = await existingReport.update(updatedData);
+    await workReport.destroy();
   
-    return updatedReport;
+    return true; // Inspección eliminada con éxito
   }
 
-const deleteWorkReport = async (reportId: string) => {
-    const existingReport = await WorkReport.findByPk(reportId);
-  
-    if (!existingReport) {
-      throw new Error('Job report not found');
-    }
-  
-    // Realiza la eliminación del informe de trabajo
-    await existingReport.destroy();
-  
-    return { message: "Successfully deleted user" };
-  }
 export {createWorkReport, getAllWorkReports, updateWorkReport, deleteWorkReport}

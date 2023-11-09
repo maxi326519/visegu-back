@@ -47,6 +47,38 @@ export const model = (sequelize: any, DataTypes: any) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      RIF: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      ROF: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      RIR: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      ROR: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      LIF: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      LOF: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      LIR: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      LOR: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     { updatedAt: false, timestamps: false }
   );
