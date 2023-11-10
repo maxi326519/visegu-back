@@ -60,7 +60,8 @@ export const {
   InspectionReport,
   Clients,
   Suppliers,
-  LaborServices
+  LaborServices,
+  InspectionDetail
 } = sequelize.models;
 
 Categories.hasMany(Product);
@@ -92,6 +93,9 @@ WorkReport.hasMany(WorkReportsDetails);
 WorkReportsDetails.belongsTo(WorkReport);
 
 InspectionReport.belongsTo(User);
+
+InspectionReport.hasMany(InspectionDetail);
+InspectionDetail.belongsTo(InspectionReport);
 
 export const conn = sequelize;
 export const models = sequelize.models;

@@ -1,28 +1,26 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 import { LaborServices } from "../db";
-import { LaborServicesTS } from "../interfaces/LaborServices";
+import { createLaborService, deleteLaborService, updateLaborService } from "./controllers/laborservice";
 
 const router = Router();
 
 // Ruta para crear un nuevo servicio de mano de obra
 router.post('/', async (req: Request, res: Response) => {
-    try {
-      const laborServiceData = req.body; // Asegúrate de que los datos del cuerpo de la solicitud cumplan con la interfaz
-  
-      // Verificar si los datos requeridos están presentes
-      if (!laborServiceData.codeNumber || !laborServiceData.name) {
-        throw new Error("The 'codeNumber' and 'name' fields are required.");
-      }
-  
-      // Crear un nuevo servicio de mano de obra en la base de datos
-      const newLaborService = await LaborServices.create(laborServiceData);
-  
-      res.status(201).json(newLaborService);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
+  const laborServiceData = req.body;
+
+  try {
+    if (!laborServiceData) {
+      res.status(400).json({ error: 'Labor service data not provided' });
+      return;
     }
-  });
+
+    const newLaborService = await createLaborService(laborServiceData);
+    res.status(201).json(newLaborService);
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating labor service' });
+  }
+});
 
   // Ruta para obtener todos los servicios de mano de obra
 router.get('/', async (req: Request, res: Response) => {
@@ -36,47 +34,38 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
 
-  // Ruta para actualizar un servicio de mano de obra
+// Ruta para actualizar un servicio de mano de obra por su ID
 router.patch('/:id', async (req: Request, res: Response) => {
-    try {
-      const {id} = req.params;
-      const updatedData: LaborServicesTS = req.body; // Asegúrate de que los datos del cuerpo de la solicitud cumplan con la interfaz
-  
-      // Verificar si el servicio de mano de obra existe
-      const existingLaborService = await LaborServices.findByPk(id);
-  
-      if (!existingLaborService) {
-        throw new Error("Labor service not found.");
-      }
-  
-      // Realiza la actualización con los nuevos datos proporcionados
-      const updatedLaborService = await existingLaborService.update(updatedData);
-  
-      res.status(200).json(updatedLaborService);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
+  const {id} = req.params;
+  const updatedLaborServiceData = req.body;
 
-  // Ruta para eliminar un servicio de mano de obra
-router.delete('/:id', async (req: Request, res: Response) => {
-    try {
-      const {id} = req.params;
-  
-      // Verificar si el servicio de mano de obra existe
-      const existingLaborService = await LaborServices.findByPk(id);
-  
-      if (!existingLaborService) {
-        throw new Error("Labor service not found.");
-      }
-  
-      // Realiza la eliminación del servicio de mano de obra
-      await existingLaborService.destroy();
-  
-      res.status(204).send(); // Respuesta exitosa sin contenido
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
+  try {
+    if (!updatedLaborServiceData) {
+      res.status(400).json({ error: 'Labor service data not provided' });
+      return;
     }
-  });
+
+    await updateLaborService({ id, ...updatedLaborServiceData });
+    res.status(200).json({ message: 'Successfully updated labor service' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating labor service' });
+  }
+});
+
+// Ruta para eliminar un servicio de mano de obra por su ID
+router.delete('/:id', async (req: Request, res: Response) => {
+  const {id} = req.params;
+
+  try {
+    const isDeleted = await deleteLaborService(id);
+    if (isDeleted) {
+      res.status(200).json({ message: 'laborService successfully removed' });
+    } else {
+      res.status(404).json({ error: 'Labor service not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting labor service' });
+  }
+});
 
 export default router;

@@ -15,7 +15,10 @@ import { verificarToken } from "./routes/controllers/verificacion";
 import suppliers from "./routes/suppliers";
 import clients from "./routes/clients";
 import workreport from "./routes/workreport";
-import laborservice from "./routes/laborservice"
+import laborservice from "./routes/laborservice";
+import inspections from "./routes/inspection";
+import inspectionsDetail from "./routes/inspectionDetail";
+import workDetail from "./routes/workDetail";
 
 // Ceate app
 const app = express();
@@ -48,6 +51,9 @@ app.use("/suppliers", verificarToken, suppliers);
 app.use("/clients", verificarToken, clients);
 app.use("/workreport", verificarToken, workreport);
 app.use("/laborservice", verificarToken, laborservice);
+app.use("/inspection", verificarToken, inspections);
+app.use("/inspectiondetail", verificarToken, inspectionsDetail);
+app.use("/workdetail", verificarToken, workDetail)
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.
