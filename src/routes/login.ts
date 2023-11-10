@@ -12,7 +12,7 @@ router.post("/", async (req: Request, res: Response) => {
     const result = await loginUser(email, password);
     res.status(200).json(result);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -31,7 +31,7 @@ router.post("/token", verificarToken, async (req: Request, res: Response) => {
     res.status(200).json(userData);
   } catch (error: any) {
     console.log(error);
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 

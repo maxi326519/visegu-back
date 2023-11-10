@@ -50,18 +50,27 @@ const getAllUsers = async () => {
 const updateUser = async (updateUser: any) => {
   const rol = ["ADMIN", "USER"];
 
+  // Verify paramenters
   if (!updateUser.name) throw new Error("missing 'name' parameter");
-  if (!updateUser.password) throw new Error("missing 'password' parameter");
   if (!updateUser.rol) throw new Error("missing 'rol' parameter");
   if (!rol.includes(updateUser.rol)) throw new Error("invalid rol");
 
-  const user = await User.findOne({
-    where: { id: updateUser.id },
-  });
+  // Get the user
+  const user = await User.findByPk(updateUser.id);
 
+  // Check if th euser exist
   if (!user) throw new Error("user not found");
 
-  user.update(updateUser);
+  // Data to update
+  let userToUpdate = updateUser;
+
+  // If password exist add it to user
+  if (updateUser.password) {
+    userToUpdate.password = await bcrypt.hash(updateUser.password, 10);
+  }
+
+  // User update
+  user.update(userToUpdate);
 };
 
 const disableUser = async (id: string, disabled: boolean) => {

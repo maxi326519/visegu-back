@@ -7,24 +7,22 @@ const PORT = process.env.PORT || 3001;
 
 // Inicialización
 conn.sync({ force: false }).then(async () => {
-  // First user
-  const user = {
-    name: "ADMIN",
-    password: "321654",
-    email: "admin@gmail.com",
-  };
+  // Get any Admin
+  const adminUser = await User.findOne({ where: { rol: "ADMIN" } });
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(user.password, 10);
+  // If admin dont exist create it
+  if (!adminUser) {
+    // User admin data
+    const user = {
+      name: "ADMIN",
+      rol: "ADMIN",
+      email: "admin@gmail.com",
+      password: await bcrypt.hash("321654987", 10),
+    };
 
-  // Create user
-  await User.create({
-    name: user.name,
-    password: hashedPassword,
-    email: user.email,
-  })
-    .then(() => console.log("Admin created"))
-    .catch(((error) => console.log(error)))
+    // Create user
+    await User.create(user).catch((error) => console.log(error));
+  }
 
   // Open server
   app.listen(PORT, () => {
