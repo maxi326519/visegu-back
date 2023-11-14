@@ -1,4 +1,5 @@
 import { Movements, Stock, Storage, Product, User } from "../../../db";
+import { MovementType } from "../../../interfaces/MovementsTS";
 
 const setMovements = async (
   date: Date,
@@ -51,9 +52,43 @@ const getMovements = async () => {
 
   // Get movements
   const movements = Movements.findAll();
-  
+
   // Return all Movements
   return movements;
-}
+};
 
-export { setMovements, getMovements };
+const deleteMovements = async (movementId: string) => {
+  // Get movements
+  const movement = await Movements.findByPk(movementId);
+  if (!movement) throw new Error("Movement not found");
+
+  // Get Stock
+  const stock = await Stock.findByPk(movement?.dataValues.StockId);
+  if (!stock) throw new Error("Stock not found");
+
+  // Get Product
+  const product = await Product.findByPk(movement?.dataValues.ProductId);
+  if (!product) throw new Error("Product not found");
+
+  // Quantity variables
+  let stockQuantity = stock.dataValues.quantity;
+  let productQuantity = product.dataValues.amount;
+
+  // Update quantity
+  if (movement.dataValues.type === MovementType.INGRESS) {
+    stockQuantity -= movement.dataValues.quantity;
+    productQuantity -= movement.dataValues.quantity;
+  } else if (movement.dataValues.type === MovementType.EGRESS) {
+    stockQuantity += movement.dataValues.quantity;
+    productQuantity += movement.dataValues.quantity;
+  }
+
+  // Update stock and product
+  await stock.update({ quantity: stockQuantity });
+  await product.update({ amount: productQuantity });
+
+  // Delete movement
+  await movement.destroy();
+};
+
+export { setMovements, getMovements, deleteMovements };

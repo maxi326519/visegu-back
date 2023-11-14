@@ -1,5 +1,5 @@
 import { Stock, Product, Storage } from "../../../db";
-import { MovementsType } from "../../../interfaces/MovementsTS";
+import { MovementType } from "../../../interfaces/MovementsTS";
 import { setMovements } from "../../controllers/movements";
 
 const createStock = async (
@@ -32,7 +32,7 @@ const createStock = async (
   // Create the movement
   const newMovement = await setMovements(
     new Date(),
-    MovementsType.entrada,
+    MovementType.INGRESS,
     quantity,
     newStock.dataValues.id,
     StorageId,
@@ -69,7 +69,9 @@ const setIngress = async (
   await stock.save();
 
   // Get and update product amount
-  const product: any = await Product.findOne({ where: { id: stock.dataValues.ProductId } });
+  const product: any = await Product.findOne({
+    where: { id: stock.dataValues.ProductId },
+  });
   if (!product) throw new Error("Product not found");
   product.amount = Number(product.amount) + Number(quantity);
   await product.save();
@@ -77,7 +79,7 @@ const setIngress = async (
   // Create the movement
   const movement = await setMovements(
     new Date(),
-    MovementsType.entrada,
+    MovementType.INGRESS,
     quantity,
     stock.dataValues.id,
     stock.dataValues.StorageId,
@@ -106,7 +108,9 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
   await stock.save();
 
   // Get and update product amount
-  const product: any = await Product.findOne({ where: { id: stock.dataValues.ProductId } });
+  const product: any = await Product.findOne({
+    where: { id: stock.dataValues.ProductId },
+  });
   if (!product) throw new Error("Product not found");
   product.amount = Number(product.amount) - Number(quantity);
   await product.save();
@@ -114,7 +118,7 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
   // Create the ingress movement
   const movement = await setMovements(
     new Date(),
-    MovementsType.salida,
+    MovementType.EGRESS,
     quantity,
     stock.dataValues.id,
     stock.dataValues.StorageId,
@@ -151,7 +155,6 @@ const setTransfer = async (
   // Get the esgress Storage
   const egressStock: any = await Stock.findByPk(StockId);
 
-
   // Check if Storage exist, and is enough quantity in stock
   if (!egressStock) throw new Error("Egress stock not found");
   if (Number(egressStock.quantity) < Number(quantity))
@@ -186,7 +189,7 @@ const setTransfer = async (
   // Create the egress movement
   const egressMovement = await setMovements(
     new Date(date),
-    MovementsType.salida,
+    MovementType.EGRESS,
     Number(quantity),
     egressStock.id,
     StorageId.egress,
@@ -197,7 +200,7 @@ const setTransfer = async (
   // Create the ingress movement
   const ingressMovement = await setMovements(
     new Date(date),
-    MovementsType.entrada,
+    MovementType.INGRESS,
     Number(quantity),
     ingressStock.id,
     StorageId.ingress,

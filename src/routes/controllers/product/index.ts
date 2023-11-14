@@ -1,13 +1,28 @@
-import { Product } from "../../../db";
+import sequelize from "sequelize";
+import { Categories, Movements, Product, Stock, Suppliers } from "../../../db";
 
 const createProduct = async (productData: any) => {
+  // Get category
+  const category = await Categories.findByPk(productData.CategoryId);
+  if (!category) throw new Error("Category not found");
+
+  // Get supplier
+  const supplier = await Suppliers.findByPk(productData.SupplierId);
+  if (!supplier) throw new Error("Supplier not found");
+
   // Create new product
-  const newProduct = await Product.create({
+  const newProduct: any = await Product.create({
     description: productData.description,
     skuNumber: productData.skuNumber,
     amount: productData.amount,
   });
-  
+
+  // Bind category
+  await newProduct.setCategory(category);
+
+  // Bind Supplier
+  await newProduct.setSupplier(supplier);
+
   return newProduct;
 };
 
@@ -26,10 +41,19 @@ const updateProducts = async (product: any) => {
 };
 
 const deleteProduct = async (productId: string) => {
-  const product = await Product.findOne({ where: { id: productId } });
-
+  // Busca el producto
+  const product = await Product.findOne({
+    where: { id: productId },
+  });
   if (!product) throw new Error("Product not found");
 
+  // Elimina todos los movimientos del producto
+  await Movements.destroy({ where: { ProductId: productId } });
+
+  // Elimina todos los stocks del producto
+  await Stock.destroy({ where: { ProductId: productId } });
+
+  // Elimina el producto
   await product.destroy();
 };
 

@@ -30,7 +30,6 @@ router.post("/token", verificarToken, async (req: Request, res: Response) => {
 
     res.status(200).json(userData);
   } catch (error: any) {
-    console.log(error);
     res.status(400).json({ error: error.message });
   }
 });

@@ -1,15 +1,14 @@
-
 export interface MovementsTS {
   id?: string;
   date: string;
-  type: MovementsType;
+  type: MovementType;
   quantity: number;
   StorageId?: string;
   UserId?: string;
   StockId?: string;
 }
 
-export enum MovementsType {
-  entrada = "ENTRADA",
-  salida = "SALIDA"
+export enum MovementType {
+  EGRESS = "Egress",
+  INGRESS = "Ingress",
 }
