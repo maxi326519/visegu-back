@@ -1,5 +1,5 @@
-import { Router } from "express";
 import { Request, Response } from "express";
+import { Router } from "express";
 import {
   createProduct,
   getAllProducts,

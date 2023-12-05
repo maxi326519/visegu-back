@@ -1,4 +1,3 @@
-import sequelize from "sequelize";
 import { Categories, Movements, Product, Stock, Suppliers } from "../../../db";
 
 const createProduct = async (productData: any) => {
@@ -14,6 +13,8 @@ const createProduct = async (productData: any) => {
   const newProduct: any = await Product.create({
     description: productData.description,
     skuNumber: productData.skuNumber,
+    priceBuy: productData.priceBuy,
+    priceSale: productData.priceSale,
     amount: productData.amount,
   });
 

@@ -20,6 +20,14 @@ export const model = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         defaultValue: 0,
       },
+      priceBuy: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      priceSale: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       disabled: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
