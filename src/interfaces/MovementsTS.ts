@@ -1,11 +1,18 @@
 export interface MovementsTS {
   id?: string;
-  date: string;
+  date: Date;
   type: MovementType;
   quantity: number;
-  StorageId?: string;
+  ProductId?: string;
   UserId?: string;
-  StockId?: string;
+  Stocks: {
+    egress: string,
+    ingress: string,
+  },
+  Storage: {
+    egress: string,
+    ingress: string,
+  },
 }
 
 export enum MovementType {

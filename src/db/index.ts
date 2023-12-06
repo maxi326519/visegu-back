@@ -1,7 +1,7 @@
 require("dotenv").config();
-import fs from "fs";
-import path from "path";
 import { Sequelize, DataTypes } from "sequelize";
+import path from "path";
+import fs from "fs";
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
 
@@ -61,7 +61,7 @@ export const {
   Clients,
   Suppliers,
   LaborServices,
-  InspectionDetail
+  InspectionDetail,
 } = sequelize.models;
 
 Categories.hasMany(Product);
@@ -74,19 +74,35 @@ Product.hasMany(Movements);
 
 Stock.belongsTo(Storage);
 Stock.belongsTo(Product);
-Stock.hasMany(Movements);
 
 Storage.hasMany(Stock);
-Storage.hasMany(Movements);
 
 User.hasMany(Movements);
 User.hasMany(WorkReport);
 User.hasMany(InspectionReport);
 
 Movements.belongsTo(User);
-Movements.belongsTo(Storage);
-Movements.belongsTo(Stock);
 Movements.belongsTo(Product);
+
+Movements.belongsTo(Stock, {
+  foreignKey: "StockIngressId",
+  as: "sourceStockIngress",
+});
+
+Movements.belongsTo(Stock, {
+  foreignKey: "StockEgressId",
+  as: "StockEgress",
+});
+
+Movements.belongsTo(Storage, {
+  foreignKey: "StorageIngressId",
+  as: "StorageIngress",
+});
+
+Movements.belongsTo(Storage, {
+  foreignKey: "StorageEgressId",
+  as: "StorageEgress",
+});
 
 WorkReport.belongsTo(User);
 WorkReport.hasMany(WorkReportsDetails);

@@ -19,7 +19,7 @@ export const model = (sequelize: any, DataTypes: any) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-/*       StockIngressId: {
+      StockIngressId: {
         type: DataTypes.UUID,
         allowNull: true,
       },
@@ -34,7 +34,7 @@ export const model = (sequelize: any, DataTypes: any) => {
       StorageEgressId: {
         type: DataTypes.UUID,
         allowNull: true,
-      }, */
+      },
     },
     { updatedAt: false, timestamps: false }
   );
