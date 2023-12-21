@@ -34,9 +34,9 @@ const createStock = async (
     new Date(),
     MovementType.INGRESS,
     quantity,
-    newStock.dataValues.id,
-    StorageId,
     ProductId,
+    { ingress: newStock.dataValues.id },
+    { ingress: StorageId },
     userId
   );
 
@@ -81,9 +81,9 @@ const setIngress = async (
     new Date(),
     MovementType.INGRESS,
     quantity,
-    stock.dataValues.id,
-    stock.dataValues.StorageId,
     stock.dataValues.ProductId,
+    { ingress: stock.dataValues.id },
+    { ingress: stock.dataValues.StorageId },
     userId
   );
 
@@ -120,9 +120,9 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
     new Date(),
     MovementType.EGRESS,
     quantity,
-    stock.dataValues.id,
-    stock.dataValues.StorageId,
     stock.dataValues.ProductId,
+    { ingress: stock.dataValues.id },
+    { ingress: stock.dataValues.StorageId },
     userId
   );
 
@@ -186,25 +186,20 @@ const setTransfer = async (
   egressStock.quantity = Number(egressStock.quantity) - Number(quantity);
   await egressStock.save();
 
-  // Create the egress movement
-  const egressMovement = await setMovements(
-    new Date(date),
-    MovementType.EGRESS,
-    Number(quantity),
-    egressStock.id,
-    StorageId.egress,
-    egressStock.ProductId,
-    userId
-  );
-
-  // Create the ingress movement
-  const ingressMovement = await setMovements(
+  // Create the transfer movement
+  const transferMovement = await setMovements(
     new Date(date),
     MovementType.INGRESS,
     Number(quantity),
-    ingressStock.id,
-    StorageId.ingress,
     egressStock.ProductId,
+    {
+      ingress: ingressStock.id,
+      egress: egressStock,
+    },
+    {
+      ingress: StorageId.egress,
+      egress: StorageId.ingress,
+    },
     userId
   );
 
@@ -214,10 +209,7 @@ const setTransfer = async (
       egress: egressStock,
       ingress: ingressStock,
     },
-    Movements: {
-      egress: egressMovement,
-      ingress: ingressMovement,
-    },
+    Movement: transferMovement
   };
 };
 

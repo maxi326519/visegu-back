@@ -7,12 +7,12 @@ const setMovements = async (
   quantity: number,
   ProductId: string,
   Stocks: {
-    egress: string;
-    ingress: string;
+    egress?: string;
+    ingress?: string;
   },
   Storage: {
-    egress: string;
-    ingress: string;
+    egress?: string;
+    ingress?: string;
   },
   UserId?: string
 ) => {

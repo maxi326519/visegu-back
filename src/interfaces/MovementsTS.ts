@@ -18,4 +18,5 @@ export interface MovementsTS {
 export enum MovementType {
   EGRESS = "Egress",
   INGRESS = "Ingress",
+  TRANFER = "Transfer",
 }
