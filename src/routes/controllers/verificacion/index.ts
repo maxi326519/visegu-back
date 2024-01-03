@@ -15,7 +15,7 @@ const verificarToken = (req: Request, res: Response, next: NextFunction) => {
     // Get token to header
     const token = req.headers.authorization?.split(" ")[1];
 
-    console.log(req.headers.authorization);
+    console.log(token);
 
     // Check token
     if (!token) throw new Error("Token not provided");

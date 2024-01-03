@@ -54,17 +54,24 @@ const getStock = () => {
 };
 
 const setIngress = async (
-  StockId: string,
   quantity: number,
+  ProductId: string,
+  Storage: {
+    egress: string;
+    ingress: string;
+  },
   userId: string
 ) => {
   // Check parameters
-  if (!StockId) throw new Error("missing parameter: StockId");
+  if (!ProductId) throw new Error("missing parameter: ProductId");
   if (!quantity) throw new Error("missing parameter: quantity");
 
-  // Get the tock, add the amount and save
-  const stock: any = await Stock.findByPk(StockId);
-  if (!stock) throw new Error(`Stock not found`);
+  // Get the stock, add the amount and save
+  const stock: any = await Stock.findOne({ where: { ProductId } });
+  if (!stock) {
+    console.log("Creando nuevo:", quantity, ProductId, Storage.ingress, userId);
+    return createStock(quantity, ProductId, Storage.ingress, userId);
+  }
   stock.quantity = Number(stock.quantity) + Number(quantity);
   await stock.save();
 
@@ -95,13 +102,17 @@ const setIngress = async (
   };
 };
 
-const setEgress = async (StockId: string, quantity: number, userId: string) => {
+const setEgress = async (
+  Stocks: { egress: string; ingress: string },
+  quantity: number,
+  userId: string
+) => {
   // Check parameters
-  if (!StockId) throw new Error("missing parameter: StockId");
+  if (!Stocks.egress) throw new Error("missing parameter: StockId");
   if (!quantity) throw new Error("missing parameter: quantity");
 
   // Get the tock, check quantity and subtract the amount
-  const stock: any = await Stock.findByPk(StockId);
+  const stock: any = await Stock.findByPk(Stocks.egress);
   if (!stock) throw new Error(`Stock not found`);
   if (stock.quantity < Number(quantity)) throw new Error("Insufficient Stock");
   stock.quantity = Number(stock.quantity) - Number(quantity);
@@ -121,8 +132,8 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
     MovementType.EGRESS,
     quantity,
     stock.dataValues.ProductId,
-    { ingress: stock.dataValues.id },
-    { ingress: stock.dataValues.StorageId },
+    { egress: Stocks.egress },
+    { egress: stock.dataValues.StorageId },
     userId
   );
 
@@ -137,8 +148,8 @@ const setEgress = async (StockId: string, quantity: number, userId: string) => {
 const setTransfer = async (
   date: string,
   quantity: number,
-  StockId: string,
-  StorageId: {
+  Stocks: { egress: string; ingress: string },
+  Storage: {
     egress: string;
     ingress: string;
   },
@@ -147,13 +158,21 @@ const setTransfer = async (
   // Check parameters
   if (!date) throw new Error("missing parameter: date");
   if (!new Date(date)?.getTime()) throw new Error("invalid date");
-  if (!StorageId.egress) throw new Error("missing parameter: ingress storage");
-  if (!StorageId.ingress) throw new Error("missing parameter: egress storage");
-  if (StorageId.egress === StorageId.ingress)
-    throw new Error("the storages cannot be the same");
+
+  if (!Stocks.egress) throw new Error("missing parameter: egress stock");
+  if (Stocks.egress === Stocks.ingress)
+    throw new Error("the storvges cannot be the same");
+
+  if (!Storage.egress) throw new Error("missing parameter: egress storage");
+  if (!Storage.ingress) throw new Error("missing parameter: ingress storage");
+  if (Storage.egress === Storage.ingress)
+    throw new Error("the storvges cannot be the same");
+
+  console.log("------------------------Controlador-----------------------");
+  console.log("Controlador", Storage);
 
   // Get the esgress Storage
-  const egressStock: any = await Stock.findByPk(StockId);
+  const egressStock: any = await Stock.findByPk(Stocks.egress);
 
   // Check if Storage exist, and is enough quantity in stock
   if (!egressStock) throw new Error("Egress stock not found");
@@ -163,7 +182,7 @@ const setTransfer = async (
   // Get the esgress Storage
   let ingressStock: any = await Stock.findOne({
     where: {
-      StorageId: StorageId.ingress,
+      StorageId: Storage.ingress,
       ProductId: egressStock.ProductId,
     },
   });
@@ -176,7 +195,7 @@ const setTransfer = async (
   } else {
     // Else create it
     ingressStock = await Stock.create({
-      StorageId: StorageId.ingress,
+      StorageId: Storage.ingress,
       ProductId: egressStock.ProductId,
       quantity: Number(quantity),
     });
@@ -189,16 +208,16 @@ const setTransfer = async (
   // Create the transfer movement
   const transferMovement = await setMovements(
     new Date(date),
-    MovementType.INGRESS,
+    MovementType.TRANFER,
     Number(quantity),
     egressStock.ProductId,
     {
       ingress: ingressStock.id,
-      egress: egressStock,
+      egress: egressStock.id,
     },
     {
-      ingress: StorageId.egress,
-      egress: StorageId.ingress,
+      ingress: Storage.egress,
+      egress: Storage.ingress,
     },
     userId
   );
@@ -209,7 +228,7 @@ const setTransfer = async (
       egress: egressStock,
       ingress: ingressStock,
     },
-    Movement: transferMovement
+    Movement: transferMovement,
   };
 };
 
