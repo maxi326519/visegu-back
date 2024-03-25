@@ -1,12 +1,12 @@
 import { User, conn } from "./db";
+import app from "./app";
 const bcrypt = require("bcrypt");
-const app = require("./app");
 require("./db");
 
 const PORT = process.env.PORT || 3001;
 
 // Inicialización
-conn.sync({ force: false, alter: true }).then(async () => {
+conn.sync({ force: true, alter: true }).then(async () => {
   // Get any Admin
   const adminUser = await User.findOne({ where: { rol: "ADMIN" } });
 

@@ -19,6 +19,7 @@ import laborservice from "./routes/laborservice";
 import inspections from "./routes/inspection";
 import inspectionsDetail from "./routes/inspectionDetail";
 import workDetail from "./routes/workDetail";
+import lists from "./routes/lists";
 
 // Ceate app
 const app = express();
@@ -28,11 +29,12 @@ const corsOptions = {
   origin: "*",
   credentials: true,
   methods: "GET, PATCH, POST, OPTIONS, PUT, DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, authorization",
+  allowedHeaders:
+    "Origin, X-Requested-With, Content-Type, Accept, authorization",
 };
 
 // app config
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
@@ -53,7 +55,8 @@ app.use("/workreport", verificarToken, workreport);
 app.use("/laborservice", verificarToken, laborservice);
 app.use("/inspection", verificarToken, inspections);
 app.use("/inspectiondetail", verificarToken, inspectionsDetail);
-app.use("/workdetail", verificarToken, workDetail)
+app.use("/workdetail", verificarToken, workDetail);
+app.use("/lists", /* verificarToken, */ lists);
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.
@@ -65,4 +68,4 @@ app.use((err: any, req: any, res: any, next: any) => {
   res.status(status).send(message);
 });
 
-module.exports = app;
+export default app;

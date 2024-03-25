@@ -62,6 +62,11 @@ export const {
   Suppliers,
   LaborServices,
   InspectionDetail,
+  Locations,
+  Equipments,
+  Parts,
+  States,
+  ChassisOwwnerOrLessor,
 } = sequelize.models;
 
 Categories.hasMany(Product);
