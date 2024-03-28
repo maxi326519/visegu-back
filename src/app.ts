@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 
 // Import Routes
+import { verificarToken } from "./routes/controllers/verificacion";
 import user from "./routes/users";
 import products from "./routes/products";
 import categories from "./routes/categories";
@@ -11,14 +12,11 @@ import storage from "./routes/storage";
 import stock from "./routes/stock";
 import movements from "./routes/movements";
 import login from "./routes/login";
-import { verificarToken } from "./routes/controllers/verificacion";
 import suppliers from "./routes/suppliers";
 import clients from "./routes/clients";
-import workreport from "./routes/workreport";
+import workReport from "./routes/workReport";
 import laborservice from "./routes/laborservice";
 import inspections from "./routes/inspection";
-import inspectionsDetail from "./routes/inspectionDetail";
-import workDetail from "./routes/workDetail";
 import lists from "./routes/lists";
 
 // Ceate app
@@ -51,12 +49,12 @@ app.use("/stock", verificarToken, stock);
 app.use("/movements", verificarToken, movements);
 app.use("/suppliers", verificarToken, suppliers);
 app.use("/clients", verificarToken, clients);
-app.use("/workreport", verificarToken, workreport);
 app.use("/laborservice", verificarToken, laborservice);
-app.use("/inspection", verificarToken, inspections);
-app.use("/inspectiondetail", verificarToken, inspectionsDetail);
-app.use("/workdetail", verificarToken, workDetail);
 app.use("/lists", /* verificarToken, */ lists);
+
+// Reports
+app.use("/inspection", verificarToken, inspections);
+app.use("/work", verificarToken, workReport);
 
 // Implementar un protocolo de HTTPS de Security
 // Error catching endware.

@@ -26,7 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/", async (req: Request, res: Response) => {
+router.post("/delete", async (req: Request, res: Response) => {
   try {
     const { name, values } = req.body;
 
