@@ -63,6 +63,8 @@ export const {
   LaborServices,
   InspectionDetail,
   Locations,
+  RepairItem,
+  Services,
   Equipments,
   Parts,
   States,

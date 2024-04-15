@@ -4,6 +4,7 @@ import {
   Equipments,
   Locations,
   Parts,
+  RepairItem,
   States,
 } from "../../../db";
 
@@ -17,6 +18,7 @@ const lists: Lists = {
   equipment: Equipments,
   parts: Parts,
   state: States,
+  repairItem: RepairItem,
   chassisOwwnerOrLessor: ChassisOwwnerOrLessor,
 };
 
