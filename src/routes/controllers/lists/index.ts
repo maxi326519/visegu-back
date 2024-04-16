@@ -5,6 +5,7 @@ import {
   Locations,
   Parts,
   RepairItem,
+  Services,
   States,
 } from "../../../db";
 
@@ -18,7 +19,8 @@ const lists: Lists = {
   equipment: Equipments,
   parts: Parts,
   state: States,
-  repairItem: RepairItem,
+  repairItems: RepairItem,
+  services: Services,
   chassisOwwnerOrLessor: ChassisOwwnerOrLessor,
 };
 
@@ -29,8 +31,14 @@ const setList = async (name: string, values: string[]): Promise<void> => {
   if (!table) throw new Error("Table not found");
 
   // Save list data
-  for (const value of values) {
-    await table.create({ name: value });
+  if (name === "services") {
+    for (const value of values) {
+      await table.create(value as any);
+    }
+  } else {
+    for (const value of values) {
+      await table.create({ name: value });
+    }
   }
 };
 
@@ -41,11 +49,22 @@ const getList = async () => {
   // Get tables
   for (const [key, table] of Object.entries(lists)) {
     const records = await table.findAll();
-    const data = records.map((record) => {
-      // Clonamos dataValues para no modificar el objeto original
-      const item = { ...record.get({ plain: true }) };
-      return item.name;
-    });
+    let data: any[] = [];
+
+    if (key === "services") {
+      data = records.map((record) => {
+        const item = { ...record.get({ plain: true }) };
+        return {
+          code: item.code,
+          description: item.description,
+        };
+      });
+    } else {
+      data = records.map((record) => {
+        const item = { ...record.get({ plain: true }) };
+        return item.name;
+      });
+    }
     result[key] = data;
   }
 

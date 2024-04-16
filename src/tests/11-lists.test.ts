@@ -5,8 +5,11 @@ const {
   Equipments,
   Parts,
   States,
+  RepairItem,
+  Services,
   ChassisOwwnerOrLessor,
 } = require("../db");
+require("dotenv").config();
 
 const request = supertest(app);
 
@@ -17,6 +20,8 @@ async function clearTables() {
     Equipments.destroy({ where: {} }),
     Parts.destroy({ where: {} }),
     States.destroy({ where: {} }),
+    RepairItem.destroy({ where: {} }),
+    Services.destroy({ where: {} }),
     ChassisOwwnerOrLessor.destroy({ where: {} }),
   ]);
 }
@@ -28,6 +33,8 @@ describe("POST /lists", () => {
   });
 
   test("It should add two elements to the Locations table", async () => {
+    require("dotenv").config();
+
     const response = await request
       .post("/lists")
       .send({ name: "locations", values: ["Location1", "Location2"] })
