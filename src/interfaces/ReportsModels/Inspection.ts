@@ -1,58 +1,62 @@
 export interface Inspection {
   id?: string;
   userId?: string;
-  yearFMCSA: string;
-  FMCSA: string;
-  yearBIT: string;
-  BIT: string;
+  userName: string;
+  yearFMCSA?: Date;
+  FMCSA?: Date;
+  yearBIT?: Date;
+  BIT?: Date;
   licenseNumber: string;
   state: string;
   location: string;
-  quipment: string;
+  equipment: string;
   ownerOrLessor: string;
-  InspectionDetail?: InspectionDetail[];
+  ok1: boolean;
+  repair1: string;
+  labor1: string;
+  material1: string;
+  ok2: boolean;
+  repair2: string;
+  labor2: string;
+  material2: string;
+  ok3: boolean;
+  repair3: string;
+  labor3: string;
+  material3: string;
+  ok4: boolean;
+  repair4: string;
+  labor4: string;
+  material4: string;
+  ok5: boolean;
+  repair5: string;
+  labor5: string;
+  material5: string;
+  ok6: boolean;
+  repair6: string;
+  labor6: string;
+  material6: string;
+  ok7: boolean;
+  repair7: string;
+  labor7: string;
+  material7: string;
+  ok8: boolean;
+  repair8: string;
+  labor8: string;
+  material8: string;
+  ok9: boolean;
+  repair9: string;
+  labor9: string;
+  material9: string;
+  ok10: boolean;
+  repair10: string;
+  labor10: string;
+  material10: string;
+  ok11: boolean;
+  repair11: string;
+  labor11: string;
+  material11: string;
+  ok12: boolean;
+  repair12: string;
+  labor12: string;
+  material12: string;
 }
-
-export interface InspectionDetail {
-  ok: string;
-  repair: string;
-  labor: string;
-  material: string;
-  number: number;
-}
-
-export interface InspectionError {
-  yearFMCSA: string;
-  FMCSA: string;
-  yearBIT: string;
-  BIT: string;
-  licenseNumber: string;
-  state: string;
-  location: string;
-  quipment: string;
-  ownerOrLessor: string;
-}
-
-export const initInspection = (): Inspection => ({
-  yearFMCSA: "",
-  FMCSA: "",
-  yearBIT: "",
-  BIT: "",
-  licenseNumber: "",
-  state: "",
-  location: "",
-  quipment: "",
-  ownerOrLessor: "",
-});
-
-export const initInspectionError = (): InspectionError => ({
-  yearFMCSA: "",
-  FMCSA: "",
-  yearBIT: "",
-  BIT: "",
-  licenseNumber: "",
-  state: "",
-  location: "",
-  quipment: "",
-  ownerOrLessor: "",
-});

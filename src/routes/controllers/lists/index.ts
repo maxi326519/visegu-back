@@ -1,6 +1,7 @@
 import { Model, ModelCtor } from "sequelize";
 import {
   ChassisOwwnerOrLessor,
+  Customers,
   Equipments,
   Locations,
   Parts,
@@ -22,6 +23,7 @@ const lists: Lists = {
   repairItems: RepairItem,
   services: Services,
   chassisOwwnerOrLessor: ChassisOwwnerOrLessor,
+  customers: Customers,
 };
 
 // Añadir valores a la tabla
@@ -78,10 +80,18 @@ const deleteList = async (name: string, values: string[]): Promise<void> => {
   if (!table) throw new Error("Table not found");
 
   // Delete values
-  for (const value of values) {
-    await table.destroy({
-      where: { name: value },
-    });
+  if (name === "services") {
+    for (const value of values as any) {
+      await table.destroy({
+        where: { code: value.code },
+      });
+    }
+  } else {
+    for (const value of values) {
+      await table.destroy({
+        where: { name: value },
+      });
+    }
   }
 };
 

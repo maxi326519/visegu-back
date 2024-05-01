@@ -1,92 +1,49 @@
 export interface WorkReportTS {
-  id?: string;
+  id?: "";
   customer: string;
   location: string;
-  timeToStartServices: Date;
+  timeToStartServices: string;
   equipment: string;
   dateOfRepair: Date;
-  timeFinishService: Date;
+  timeFinishService: string;
   licensePlate: string;
   PO: string;
   VIN: string;
   mechanicName: string;
   check: {
     RIF: boolean;
+    RIFData: string;
+    RIFData2: string;
     ROF: boolean;
+    ROFData: string;
+    ROFData2: string;
     RIR: boolean;
+    RIRData: string;
+    RIRData2: string;
     ROR: boolean;
+    RORData: string;
+    RORData2: string;
     LIF: boolean;
+    LIFData: string;
+    LIFData2: string;
     LOF: boolean;
+    LOFData: string;
+    LOFData2: string;
     LIR: boolean;
+    LIRData: string;
+    LIRData2: string;
     LOR: boolean;
+    LORData: string;
+    LORData2: string;
   };
-  tableData: Array<TableData>;
+  tableData: Array<WrokTable>;
 }
 
-export interface TableData {
+export interface WrokTable {
   code: string;
   workDescription: string;
   laborTime: number;
   parts: string;
+  quantity: string;
   total: string;
 }
-
-export interface WorkReportError {
-  customer: string;
-  location: string;
-  timeToStartServices: string;
-  equipment: string;
-  dateOfRepair: string;
-  timeFinishService: string;
-  licensePlate: string;
-  PO: string;
-  VIN: string;
-  mechanicName: string;
-  table: string;
-}
-
-export const initWorkReportTS = (): WorkReportTS => ({
-  customer: "",
-  location: "",
-  timeToStartServices: new Date(),
-  equipment: "",
-  dateOfRepair: new Date(),
-  timeFinishService: new Date(),
-  licensePlate: "",
-  PO: "",
-  VIN: "",
-  mechanicName: "",
-  check: {
-    RIF: false,
-    ROF: false,
-    RIR: false,
-    ROR: false,
-    LIF: false,
-    LOF: false,
-    LIR: false,
-    LOR: false,
-  },
-  tableData: [],
-});
-
-export const initWorkReportError = (): WorkReportError => ({
-  customer: "",
-  location: "",
-  timeToStartServices: "",
-  equipment: "",
-  dateOfRepair: "",
-  timeFinishService: "",
-  licensePlate: "",
-  PO: "",
-  VIN: "",
-  mechanicName: "",
-  table: "",
-});
-
-export const initTableData = () => ({
-  code: "",
-  workDescription: "",
-  laborTime: 0,
-  parts: "",
-  total: "",
-});

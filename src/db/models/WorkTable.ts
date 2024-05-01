@@ -1,6 +1,6 @@
 export const model = (sequelize: any, DataTypes: any) => {
   sequelize.define(
-    "WorkReportsDetails",
+    "WorkTable",
     {
       id: {
         type: DataTypes.UUID,
@@ -23,9 +23,13 @@ export const model = (sequelize: any, DataTypes: any) => {
         type: DataTypes.STRING,
         alowNull: false,
       },
+      quantity: {
+        type: DataTypes.STRING,
+        alowNull: true,
+      },
       total: {
         type: DataTypes.STRING,
-        alowNull: false,
+        alowNull: true,
       },
     },
     { updatedAt: false, timestamps: false }

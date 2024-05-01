@@ -1,9 +1,23 @@
+import { WorkReport, WorkTable } from "../../../db";
 import { WorkReportTS } from "../../../interfaces/ReportsModels/Work";
-import { WorkReport } from "../../../db";
 
-const createWorkReport = async (newReport: WorkReportTS) => {
-  const createdReport = await WorkReport.create(newReport as any);
-  return createdReport;
+const createWorkReport = async (
+  report: WorkReportTS
+): Promise<WorkReportTS> => {
+  // Get data and table data
+  const { tableData, ...workReport } = report;
+
+  // Save date
+  const createdReport = await WorkReport.create(workReport as any);
+  for (const item of tableData) {
+    await WorkTable.create(item as any);
+  }
+
+  // Return report
+  return {
+    ...createdReport.dataValues,
+    tableData,
+  };
 };
 
 const getAllWorkReports = async () => {

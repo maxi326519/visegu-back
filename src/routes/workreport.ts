@@ -20,7 +20,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Ruta para obtener todos los informes de trabajo
 router.get("/", async (req, res) => {
   try {
     const workReports = await getAllWorkReports();
@@ -30,7 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Ruta para actualizar un informe de trabajo por su ID
 router.patch("/", async (req: Request, res: Response) => {
   try {
     const workReport = req.body;
@@ -41,7 +39,6 @@ router.patch("/", async (req: Request, res: Response) => {
   }
 });
 
-// Ruta para eliminar un informe de trabajo por su ID
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;

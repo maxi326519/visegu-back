@@ -1,5 +1,5 @@
-import { WorkReportTS } from "../interfaces/ReportsModels/Work";
 import { User, WorkReport } from "../db";
+import { WorkReportTS } from "../interfaces/ReportsModels/Work";
 import request from "supertest";
 import jwt from "jsonwebtoken";
 import app from "../app";
@@ -7,23 +7,39 @@ import app from "../app";
 let workReport: WorkReportTS = {
   customer: "Garcia",
   location: "Buenos Aires",
-  timeToStartServices: new Date(),
+  timeToStartServices: "",
   equipment: "Equip1",
   dateOfRepair: new Date(),
-  timeFinishService: new Date(),
+  timeFinishService: "Time finish",
   licensePlate: "Plate",
   PO: "PO1",
   VIN: "V.I.N.1.",
   mechanicName: "Mechanic",
   check: {
     RIF: false,
+    RIFData: "7/32",
+    RIFData2: "1",
     ROF: false,
+    ROFData: "7/33",
+    ROFData2: "2",
     RIR: false,
+    RIRData: "7/34",
+    RIRData2: "3",
     ROR: false,
+    RORData: "7/35",
+    RORData2: "4",
     LIF: false,
+    LIFData: "7/36",
+    LIFData2: "5",
     LOF: false,
+    LOFData: "7/37",
+    LOFData2: "6",
     LIR: false,
+    LIRData: "7/38",
+    LIRData2: "7",
     LOR: false,
+    LORData: "7/39",
+    LORData2: "8",
   },
   tableData: [
     {
@@ -31,12 +47,12 @@ let workReport: WorkReportTS = {
       workDescription: "Ruedas",
       laborTime: 0.5,
       parts: "Part 1",
+      quantity: "2",
       total: "100",
     },
   ],
 };
 
-// Función de ayuda para generar un token JWT para pruebas
 const generateToken = async () => {
   // Get Admin user
   const user = (await User.findOne({ where: { rol: "ADMIN" } }))?.dataValues;
@@ -102,10 +118,13 @@ describe("Routes - /work", () => {
       // Get Work report
       const workUpdated = (await WorkReport.findByPk(workReport.id))
         ?.dataValues;
+      const workTableUpdated = (await WorkReport.findByPk(workReport.id))
+        ?.dataValues;
 
       // Compare results
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Updated successfully");
+      expect(workReport).toBe(workUpdated);
     });
   });
 

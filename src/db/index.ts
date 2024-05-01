@@ -56,18 +56,18 @@ export const {
   Storage,
   User,
   WorkReport,
-  WorkReportsDetails,
+  WorkTable,
   InspectionReport,
   Clients,
   Suppliers,
   LaborServices,
-  InspectionDetail,
   Locations,
   RepairItem,
   Services,
   Equipments,
   Parts,
   States,
+  Customers,
   ChassisOwwnerOrLessor,
 } = sequelize.models;
 
@@ -112,13 +112,10 @@ Movements.belongsTo(Storage, {
 });
 
 WorkReport.belongsTo(User);
-WorkReport.hasMany(WorkReportsDetails);
-WorkReportsDetails.belongsTo(WorkReport);
+WorkReport.hasMany(WorkTable);
+WorkTable.belongsTo(WorkReport);
 
 InspectionReport.belongsTo(User);
-
-InspectionReport.hasMany(InspectionDetail);
-InspectionDetail.belongsTo(InspectionReport);
 
 export const conn = sequelize;
 export const models = sequelize.models;
