@@ -13,7 +13,7 @@ import stock from "./routes/stock";
 import movements from "./routes/movements";
 import login from "./routes/login";
 import suppliers from "./routes/suppliers";
-import clients from "./routes/clients";
+import customers from "./routes/customers";
 import workReport from "./routes/workReport";
 import laborservice from "./routes/laborservice";
 import inspections from "./routes/inspection";
@@ -48,9 +48,9 @@ app.use("/storages", verificarToken, storage);
 app.use("/stock", verificarToken, stock);
 app.use("/movements", verificarToken, movements);
 app.use("/suppliers", verificarToken, suppliers);
-app.use("/clients", verificarToken, clients);
+app.use("/customers", verificarToken, customers);
 app.use("/laborservice", verificarToken, laborservice);
-app.use("/lists", /* verificarToken, */ lists);
+app.use("/lists", verificarToken, lists);
 
 // Reports
 app.use("/inspection", verificarToken, inspections);

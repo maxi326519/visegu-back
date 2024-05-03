@@ -58,7 +58,7 @@ export const {
   WorkReport,
   WorkTable,
   InspectionReport,
-  Clients,
+  Customers,
   Suppliers,
   LaborServices,
   Locations,
@@ -67,7 +67,6 @@ export const {
   Equipments,
   Parts,
   States,
-  Customers,
   ChassisOwwnerOrLessor,
 } = sequelize.models;
 

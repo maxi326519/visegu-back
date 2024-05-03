@@ -1,7 +1,6 @@
 import { Model, ModelCtor } from "sequelize";
 import {
   ChassisOwwnerOrLessor,
-  Customers,
   Equipments,
   Locations,
   Parts,
@@ -23,7 +22,6 @@ const lists: Lists = {
   repairItems: RepairItem,
   services: Services,
   chassisOwwnerOrLessor: ChassisOwwnerOrLessor,
-  customers: Customers,
 };
 
 // Añadir valores a la tabla

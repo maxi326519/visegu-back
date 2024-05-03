@@ -4,11 +4,11 @@ export const model = (sequelize: any, DataTypes: any) => {
     {
       code: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       description: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
     },
     { updatedAt: false, timestamps: false }

@@ -1,7 +1,6 @@
-export interface ClientsTS {
+export interface CustomersTS {
   id?: string;
   name: string;
-  customer: string;
   phoneNumber: string;
   email: string;
   fullName: string;
