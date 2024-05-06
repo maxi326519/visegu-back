@@ -1,7 +1,10 @@
 export interface ProductTS {
   id?: String;
   description: String;
-  skunUmber: string;
+  skuNumber: string;
   amount: number;
+  priceBuy: number;
+  priceSale: number;
+  disabled: boolean;
   CategoryId?: string;
 }

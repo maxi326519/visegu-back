@@ -1,26 +1,74 @@
-import { Customers, Locations, Services, User } from "../db";
+import { ProductTS } from "../interfaces/ProductTS";
+import {
+  Categories,
+  Customers,
+  Locations,
+  Product,
+  Services,
+  Storage,
+  User,
+} from "../db";
+
 import customers from "./customers";
 import services from "./services";
 import locations from "./locations";
+import categories from "./categories";
+import storages from "./storages";
+import products from "./products";
 
 const bcrypt = require("bcrypt");
 
 export async function initData() {
-  console.log(customers);
-  console.log(services);
-  console.log(locations);
+  // Create the customers
+  for (const customer of customers) {
+    await Customers.create(customer);
+  }
 
-  (customers as unknown as any[]).forEach((customer: any) => {
-    Customers.create(customer);
-  });
+  // Create the services
+  for (const service of services) {
+    await Services.create(service);
+  }
 
-  (services as unknown as any[]).forEach((service: any) => {
-    Services.create(service);
-  });
+  // Create the locations
+  for (const location of locations) {
+    await Locations.create(location);
+  }
 
-  (locations as unknown as string[]).forEach((location: any) => {
-    Locations.create(location);
-  });
+  // Create the categories
+  for (const category of categories) {
+    await Categories.create(category);
+  }
+
+  // Create the storages
+  for (const storage of storages) {
+    await Storage.create(storage);
+  }
+
+  // Create the products
+  for (const product of products) {
+    // Create product object
+    const newProduct: ProductTS = {
+      description: product.description,
+      skuNumber: product.skuNumber,
+      amount: 0,
+      priceBuy: 0,
+      priceSale: 0,
+      disabled: false,
+    };
+
+    // Create product
+    const productDB: any = await Product.create(newProduct as any);
+
+    // Get the product category and conect to product
+    let categoryDB = await Categories.findOne({
+      where: { name: product.category },
+    });
+    if (!categoryDB) {
+      categoryDB = await Categories.create({ name: product.category });
+    } else {
+      productDB.setCategory(categoryDB);
+    }
+  }
 
   // Get any Admin
   const adminUser = await User.findOne({ where: { rol: "ADMIN" } });

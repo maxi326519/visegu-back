@@ -1,22 +1,14 @@
 import { Customers } from "../../../db";
 
 const createClient = async (customerData: any) => {
-  if (!customerData.name) throw new Error("Missing parameter: name");
-  if (!customerData.email) throw new Error("Missing parameter: email");
-  if (!customerData.phoneNumber)
-    throw new Error("Missing parameter: phoneNumber");
-  if (!customerData.billingAdress)
-    throw new Error("Missing parameter: billingAdress");
-  if (!customerData.shippingAdress)
-    throw new Error("Missing parameter: shippingAdress");
+  if (!customerData.name) throw new Error("missing parameter: name");
 
   // Verificar si el correo electrónico ya existe en la base de datos
-  const existingClient = await Customers.findOne({
-    where: { email: customerData.email },
-  });
-
-  if (existingClient) {
-    throw new Error("Client already exists");
+  if (customerData.email) {
+    const existingClient = await Customers.findOne({
+      where: { email: customerData.email },
+    });
+    if (existingClient) throw new Error("Customer already exists");
   }
 
   // Crea un nuevo customere en la base de datos
@@ -39,7 +31,7 @@ const updateCustomer = async (customerData: any) => {
   if (response) {
     await response.update(customerData);
   } else {
-    throw new Error("customerData not found");
+    throw new Error("Customer not found");
   }
 };
 

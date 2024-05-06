@@ -1,30 +1,18 @@
 import { Request, Response, Router } from "express";
+import { Customers } from "../db";
 import {
   createClient,
   getAllCustomers,
   updateCustomer,
   deleteCustomer,
 } from "./controllers/customers";
-import { Customers } from "../db";
 
 const router = Router();
 
 // Ruta para crear un nuevo cliente
 router.post("/", async (req: Request, res: Response) => {
-  const clientData = req.body;
-
   try {
-    if (
-      !clientData ||
-      !clientData.name ||
-      !clientData.email ||
-      !clientData.phoneNumber ||
-      !clientData.billingAdress ||
-      !clientData.shippingAdress
-    ) {
-      res.status(400).json({ error: "Missing parameters in customer data" });
-      return;
-    }
+    const clientData = req.body;
 
     // Verificar si el correo electrónico ya existe en la base de datos
     const existingClient = await Customers.findOne({
@@ -53,7 +41,7 @@ router.get("/", async (req, res) => {
 });
 
 // Ruta para actualizar un cliente por su ID
-router.put("/:id", async (req: Request, res: Response) => {
+router.patch("/", async (req: Request, res: Response) => {
   const { id } = req.params;
   const updatedClientData = req.body;
 
