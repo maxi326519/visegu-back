@@ -5,14 +5,14 @@ require("./db");
 
 const PORT = process.env.PORT || 3001;
 
-// Inicialización
-conn.sync({ force: true, alter: true }).then(async () => {
+if (process.argv.includes("--load-backup")) {
   // Set init data
-  console.log("Loading init data...");
-  await initData();
-
-  // Open server
-  app.listen(PORT, () => {
-    console.log(`Server listening in port ${PORT}`);
+  initData();
+} else {
+  conn.sync({ force: false, alter: true }).then(async () => {
+    // Open server
+    app.listen(PORT, () => {
+      console.log(`Server listening in port ${PORT}`);
+    });
   });
-});
+}

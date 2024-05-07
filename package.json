@@ -5,15 +5,11 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
+    "backup": "ts-node-dev ./src/index.ts --load-backup",
     "start": "node ./build/index.js",
-    "start-pm2": "pm2 start ./build/index.js",
+    "start:server": "npm run build && pm2 start ./build/index.js",
     "build": "tsc",
-    "test": "npx jest",
-    "test 01": "npx jest ./01-supplier.test.js",
-    "test 02": "npx jest ./02-product.test.js",
-    "test 03": "npx jest ./03-invoices.test.js",
-    "test 04": "npx jest ./04-servicesInvoices.test.js",
-    "test 06": "npx jest ./06-transaction.test.js"
+    "test": "npx jest"
   },
   "author": "",
   "license": "ISC",

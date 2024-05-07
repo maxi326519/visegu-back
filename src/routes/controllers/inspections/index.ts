@@ -1,46 +1,52 @@
 import { InspectionReport } from "../../../db";
+import { Inspection } from "../../../interfaces/ReportsModels/Inspection";
 
-// Define la función para crear un informe de inspección
-const createInspectionReport = async (inspectionData: any) => {
+const createInspectionReport = async (inspection: Inspection) => {
+  // Check values
+  if (!inspection.date) throw new Error("missing parameter: date");
+  if (!inspection.userName) throw new Error("missing parameter: userName");
+  if (!inspection.userId) throw new Error("missing parameter: userId");
 
-  if (!inspectionData) throw new Error ("data not found")
+  // Crete report
+  const newInspectionReport = await InspectionReport.create({ ...inspection });
 
-  const newInspectionReport = await InspectionReport.create(inspectionData);
-  
+  // Return report created
   return newInspectionReport;
-  }
+};
 
-// Define la función para obtener todos los informes de inspección
 const getAllInspectionReports = async () => {
+  // Get all reports
   const allInspectionReports = await InspectionReport.findAll();
 
+  // Return all reports
   return allInspectionReports;
-}
-
-// Define la función para actualizar un informe de inspección por su ID
-const updateInspectionReports = async (inspection: any) => {
-  const response = await InspectionReport.findOne({
-    where: { id: inspection.id },
-  });
-
-  if (response) {
-    await response.update(inspection);
-  } else {
-    throw new Error("Inspection not found");
-  }
 };
- 
-// Define la función para eliminar una inspección por su ID
+
+const updateInspectionReports = async (inspection: any) => {
+  // Find report
+  const inspectionDB = await InspectionReport.findByPk(inspection.id);
+
+  // Check if exist
+  if (!inspectionDB) throw new Error("Inspection not found");
+
+  // Update report
+  await inspectionDB.update(inspection);
+};
+
 const deleteInspectionReports = async (id: string) => {
-  const inspection = await InspectionReport.findOne({ where: { id } });
+  // Find report
+  const inspectionDB = await InspectionReport.findByPk(id);
 
-  if (!inspection) {
-    throw new Error("Inspection not found");
-  }
+  // Check if exist
+  if (!inspectionDB) throw new Error("Inspection not found");
 
-  await inspection.destroy();
+  // Delete report
+  await inspectionDB.destroy();
+};
 
-  return true; // Inspección eliminada con éxito
-}
-
-export { createInspectionReport, getAllInspectionReports, updateInspectionReports, deleteInspectionReports }
+export {
+  createInspectionReport,
+  getAllInspectionReports,
+  updateInspectionReports,
+  deleteInspectionReports,
+};

@@ -1,6 +1,7 @@
 import { ProductTS } from "../interfaces/ProductTS";
 import {
   Categories,
+  conn,
   Customers,
   Locations,
   Product,
@@ -9,6 +10,7 @@ import {
   Storage,
   User,
 } from "../db";
+import readline from "readline";
 
 import customers from "./customers";
 import services from "./services";
@@ -19,8 +21,39 @@ import products from "./products";
 import states from "./states";
 
 const bcrypt = require("bcrypt");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
 export async function initData() {
+  rl.question(
+    "Are you sure you want to run this function? This will delete the database and load backup (yes/no): ",
+    async (answer: string) => {
+      if (answer.toLowerCase() === "yes") {
+        await loadData()
+          .then(() => {
+            console.log("Data loaded successfully!");
+            rl.close();
+          })
+          .catch((error) => {
+            console.error("Error al cargar datos iniciales:", error);
+            rl.close();
+          });
+      } else {
+        console.log("Initialization aborted by the user");
+        rl.close();
+      }
+    }
+  );
+}
+
+async function loadData(): Promise<void> {
+  console.log("Creating tables...");
+  await conn.sync({ force: true });
+
+  console.log("Loading init data...");
+
   // Create the customers
   for (const customer of customers) {
     await Customers.create(customer);

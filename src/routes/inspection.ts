@@ -1,5 +1,5 @@
-import { Router } from "express";
 import { Request, Response } from "express";
+import { Router } from "express";
 import {
   createInspectionReport,
   deleteInspectionReports,
@@ -9,54 +9,59 @@ import {
 
 const router = Router();
 
-// Ruta para crear un informe de inspección
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const inspectionData = req.body; // Se espera que los datos del informe se envíen en el cuerpo de la solicitud POST
+    // Get inspection data
+    const inspectionData = req.body;
 
+    // Create new inspection
     const newInspectionReport = await createInspectionReport(inspectionData);
 
+    // Return the inspection created
     res.status(201).json(newInspectionReport);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error creating inspection report" });
   }
 });
 
-// Ruta para obtener todos los informes de inspección
 router.get("/", async (req: Request, res: Response) => {
-  const allInspectionReports = await getAllInspectionReports();
+  try {
+    // Get all inspection
+    const allInspectionReports = await getAllInspectionReports();
 
-  if (allInspectionReports) {
+    // Return inspection reports
     res.status(200).json(allInspectionReports);
-  } else {
-    res.status(500).json({ error: "Error obtaining inspection reports" });
+  } catch (error) {
+    res.status(500).json({ error: "Error geting inspection reports" });
   }
 });
 
-// Ruta para actualizar un informe de inspección por su ID
 router.patch("/", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const updatedInspectionData = req.body;
-
   try {
-    await updateInspectionReports({ id, ...updatedInspectionData });
-    res.status(200).json({ message: "Inspection report successfully updated" });
+    // Get inspection report
+    const inspection = req.body;
+
+    // Update report
+    await updateInspectionReports(inspection);
+
+    // Return confirmation
+    res.status(200).json({ message: "Inspection successfully updated" });
   } catch (error) {
     res.status(500).json({ error: "Error updating inspection report" });
   }
 });
 
-// Ruta para eliminar una inspección por su ID
 router.delete("/:id", async (req: Request, res: Response) => {
-  const id = req.params.id;
-
   try {
-    const isDeleted = await deleteInspectionReports(id);
-    if (isDeleted) {
-      res.status(200).json({ message: "Inspection successfully removed" });
-    } else {
-      res.status(404).json({ error: "Inspection not found" });
-    }
+    // Get id from params
+    const id = req.params.id;
+
+    // Delete report
+    await deleteInspectionReports(id);
+
+    // Return confirmation
+    res.status(200).json({ message: "Inspection successfully deleted" });
   } catch (error) {
     res.status(500).json({ error: "Error deleting inspection" });
   }
