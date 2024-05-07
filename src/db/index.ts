@@ -67,7 +67,6 @@ export const {
   Equipments,
   Parts,
   States,
-  ChassisOwwnerOrLessor,
 } = sequelize.models;
 
 Categories.hasMany(Product);
@@ -111,10 +110,20 @@ Movements.belongsTo(Storage, {
 });
 
 WorkReport.belongsTo(User);
-WorkReport.hasMany(WorkTable);
-WorkTable.belongsTo(WorkReport);
+WorkReport.hasMany(WorkTable, { foreignKey: 'numero', as: 'tableData' });
 
 InspectionReport.belongsTo(User);
+
+// Configuramos el primer numero incremental de los modelos
+const queryWork = 'ALTER TABLE WorkReports AUTO_INCREMENT = 10000';
+const queryInspection = 'ALTER TABLE InspectionReports AUTO_INCREMENT = 10000';
+try {
+  sequelize.query(queryWork);
+  sequelize.query(queryInspection);
+  console.log('Auto increment set successfully.');
+} catch (error) {
+  console.error('Error setting auto increment:', error);
+}
 
 export const conn = sequelize;
 export const models = sequelize.models;

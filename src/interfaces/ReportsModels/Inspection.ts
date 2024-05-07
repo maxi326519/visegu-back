@@ -1,7 +1,9 @@
 export interface Inspection {
-  id?: string;
+  numero?: string;
   userId?: string;
   userName: string;
+  date: Date;
+
   yearFMCSA?: Date;
   FMCSA?: Date;
   yearBIT?: Date;

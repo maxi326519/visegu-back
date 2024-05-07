@@ -2,46 +2,54 @@ export const model = (sequelize: any, DataTypes: any) => {
   sequelize.define(
     "InspectionReport",
     {
-      id: {
+      numero: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      yearFMCSA: {
+      userName: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      yearFMCSA: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       FMCSA: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       yearBIT: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       BIT: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       licenseNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       state: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       location: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       equipment: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       ownerOrLessor: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       ok1: {
         type: DataTypes.BOOLEAN,

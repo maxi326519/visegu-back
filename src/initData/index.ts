@@ -5,6 +5,7 @@ import {
   Locations,
   Product,
   Services,
+  States,
   Storage,
   User,
 } from "../db";
@@ -15,6 +16,7 @@ import locations from "./locations";
 import categories from "./categories";
 import storages from "./storages";
 import products from "./products";
+import states from "./states";
 
 const bcrypt = require("bcrypt");
 
@@ -42,6 +44,11 @@ export async function initData() {
   // Create the storages
   for (const storage of storages) {
     await Storage.create(storage);
+  }
+
+  // Create the states
+  for (const state of states) {
+    await States.create({ name: state });
   }
 
   // Create the products

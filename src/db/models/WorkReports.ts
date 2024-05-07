@@ -2,10 +2,18 @@ export const model = (sequelize: any, DataTypes: any) => {
   sequelize.define(
     "WorkReport",
     {
-      id: {
+      numero: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      userName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      date: {
+        type: DataTypes.DATE,
+        allowNull: false,
       },
       customer: {
         type: DataTypes.STRING,

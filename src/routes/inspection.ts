@@ -34,7 +34,7 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // Ruta para actualizar un informe de inspección por su ID
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/", async (req: Request, res: Response) => {
   const { id } = req.params;
   const updatedInspectionData = req.body;
 

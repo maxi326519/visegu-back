@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import app from "../app";
 
 let workReport: WorkReportTS = {
+  userName: "",
+  date: new Date(),
   customer: "Garcia",
   location: "Buenos Aires",
   timeToStartServices: "",
@@ -15,32 +17,30 @@ let workReport: WorkReportTS = {
   PO: "PO1",
   VIN: "V.I.N.1.",
   mechanicName: "Mechanic",
-  check: {
-    RIF: false,
-    RIFData: "7/32",
-    RIFData2: "1",
-    ROF: false,
-    ROFData: "7/33",
-    ROFData2: "2",
-    RIR: false,
-    RIRData: "7/34",
-    RIRData2: "3",
-    ROR: false,
-    RORData: "7/35",
-    RORData2: "4",
-    LIF: false,
-    LIFData: "7/36",
-    LIFData2: "5",
-    LOF: false,
-    LOFData: "7/37",
-    LOFData2: "6",
-    LIR: false,
-    LIRData: "7/38",
-    LIRData2: "7",
-    LOR: false,
-    LORData: "7/39",
-    LORData2: "8",
-  },
+  RIF: false,
+  RIFData: "7/32",
+  RIFData2: "1",
+  ROF: false,
+  ROFData: "7/33",
+  ROFData2: "2",
+  RIR: false,
+  RIRData: "7/34",
+  RIRData2: "3",
+  ROR: false,
+  RORData: "7/35",
+  RORData2: "4",
+  LIF: false,
+  LIFData: "7/36",
+  LIFData2: "5",
+  LOF: false,
+  LOFData: "7/37",
+  LOFData2: "6",
+  LIR: false,
+  LIRData: "7/38",
+  LIRData2: "7",
+  LOR: false,
+  LORData: "7/39",
+  LORData2: "8",
   tableData: [
     {
       code: "C192",
@@ -89,7 +89,7 @@ describe("Routes - /work", () => {
       expect(newWork).not.toBeNull();
 
       // Save id
-      workReport.id = newWork.id;
+      workReport.numero = newWork.numero;
     });
   });
 
@@ -116,9 +116,9 @@ describe("Routes - /work", () => {
         .send(workReport);
 
       // Get Work report
-      const workUpdated = (await WorkReport.findByPk(workReport.id))
+      const workUpdated = (await WorkReport.findByPk(workReport.numero))
         ?.dataValues;
-      const workTableUpdated = (await WorkReport.findByPk(workReport.id))
+      const workTableUpdated = (await WorkReport.findByPk(workReport.numero))
         ?.dataValues;
 
       // Compare results
@@ -132,11 +132,11 @@ describe("Routes - /work", () => {
     it("Should be delete the work report", async () => {
       // Delete wprk report
       const response = await request(app)
-        .delete(`/work/${workReport.id}`)
+        .delete(`/work/${workReport.numero}`)
         .set("Authorization", `Bearer ${token}`);
 
       // Get Work report
-      const workUpdated = (await WorkReport.findByPk(workReport.id))
+      const workUpdated = (await WorkReport.findByPk(workReport.numero))
         ?.dataValues;
 
       // Compare results
