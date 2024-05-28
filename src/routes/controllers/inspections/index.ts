@@ -24,8 +24,7 @@ const getAllInspectionReports = async () => {
 
 const updateInspectionReports = async (inspection: any) => {
   // Find report
-  const inspectionDB = await InspectionReport.findByPk(inspection.id);
-
+  const inspectionDB = await InspectionReport.findByPk(inspection.numero);
   // Check if exist
   if (!inspectionDB) throw new Error("Inspection not found");
 

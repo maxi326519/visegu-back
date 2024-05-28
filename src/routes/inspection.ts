@@ -20,7 +20,6 @@ router.post("/", async (req: Request, res: Response) => {
     // Return the inspection created
     res.status(201).json(newInspectionReport);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error creating inspection report" });
   }
 });
@@ -48,6 +47,7 @@ router.patch("/", async (req: Request, res: Response) => {
     // Return confirmation
     res.status(200).json({ message: "Inspection successfully updated" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error updating inspection report" });
   }
 });
