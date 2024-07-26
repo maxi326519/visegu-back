@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
     "backup": "ts-node-dev ./src/index.ts --load-backup",
+    "new-data": "ts-node-dev ./src/index.ts --load-new-data",
     "start": "node ./build/index.js",
     "start:server": "npm run build && pm2 start ./build/index.js",
     "build": "tsc",

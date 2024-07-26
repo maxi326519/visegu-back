@@ -1,3 +1,4 @@
+import { loadData } from "./loadData";
 import { initData } from "./initData";
 import { conn } from "./db";
 import app from "./app";
@@ -8,6 +9,13 @@ const PORT = process.env.PORT || 3001;
 if (process.argv.includes("--load-backup")) {
   // Set init data
   initData();
+} else if (process.argv.includes("--load-new-data")) {
+  // Set init data
+  try {
+    loadData();
+  } catch (error) {
+    console.log(error);
+  }
 } else {
   conn.sync({ force: false, alter: true }).then(async () => {
     // Open server
